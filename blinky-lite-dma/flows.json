@@ -111,10 +111,32 @@
         "responsetimeout": "10000"
     },
     {
+        "id": "79250bf3.365cc4",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "teensy-pi0-platform-broker",
+        "broker": "broker.shiftr.io",
+        "port": "1883",
+        "clientid": "dma",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
         "id": "77ac95b9.d96e8c",
         "type": "serial out",
         "z": "5f562f66.a301e",
-        "name": "Test",
+        "name": "Teensy",
         "serial": "21ff842d.62f36c",
         "x": 950,
         "y": 120,
@@ -125,18 +147,18 @@
         "type": "inject",
         "z": "5f562f66.a301e",
         "name": "",
-        "topic": "",
-        "payload": "Test",
-        "payloadType": "str",
+        "topic": "getLoopTime",
+        "payload": "true",
+        "payloadType": "bool",
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "x": 250,
+        "x": 290,
         "y": 120,
         "wires": [
             [
-                "5c4017ce.6e66c8"
+                "cf17dffd.b2b37"
             ]
         ]
     },
@@ -144,7 +166,7 @@
         "id": "ae4832e3.8167f",
         "type": "serial in",
         "z": "5f562f66.a301e",
-        "name": "test",
+        "name": "Teensy",
         "serial": "21ff842d.62f36c",
         "x": 260,
         "y": 220,
@@ -167,22 +189,6 @@
         "x": 770,
         "y": 220,
         "wires": []
-    },
-    {
-        "id": "5c4017ce.6e66c8",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "test message",
-        "func": "return {'topic':'crap','payload':'true'};",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 410,
-        "y": 120,
-        "wires": [
-            [
-                "cf17dffd.b2b37"
-            ]
-        ]
     },
     {
         "id": "cf17dffd.b2b37",
@@ -212,7 +218,37 @@
         "y": 220,
         "wires": [
             [
-                "1cfa5d7b.6c46a3"
+                "1cfa5d7b.6c46a3",
+                "b466e887.d9fb58"
+            ]
+        ]
+    },
+    {
+        "id": "b466e887.d9fb58",
+        "type": "mqtt out",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "loopTime",
+        "qos": "0",
+        "retain": "false",
+        "broker": "79250bf3.365cc4",
+        "x": 790,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "9c868d53.8a0e",
+        "type": "mqtt in",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "getLoopTime",
+        "qos": "0",
+        "broker": "79250bf3.365cc4",
+        "x": 290,
+        "y": 60,
+        "wires": [
+            [
+                "cf17dffd.b2b37"
             ]
         ]
     }
