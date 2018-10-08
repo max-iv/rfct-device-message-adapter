@@ -99,12 +99,12 @@
         "id": "21ff842d.62f36c",
         "type": "serial-port",
         "z": "",
-        "serialport": "/dev/ttyS0",
-        "serialbaud": "115200",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
-        "newline": "!",
+        "newline": "\\n",
         "bin": "false",
         "out": "char",
         "addchar": true,
@@ -133,51 +133,125 @@
         "willPayload": ""
     },
     {
-        "id": "77ac95b9.d96e8c",
-        "type": "serial out",
-        "z": "5f562f66.a301e",
-        "name": "Teensy",
-        "serial": "21ff842d.62f36c",
-        "x": 950,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "fe167ec8.cd0c6",
-        "type": "inject",
-        "z": "5f562f66.a301e",
-        "name": "",
-        "topic": "getLoopTime",
-        "payload": "true",
-        "payloadType": "bool",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 290,
-        "y": 120,
-        "wires": [
-            [
-                "cf17dffd.b2b37"
-            ]
-        ]
-    },
-    {
-        "id": "ae4832e3.8167f",
+        "id": "ea743ee6.d8b55",
         "type": "serial in",
         "z": "5f562f66.a301e",
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
-        "x": 260,
-        "y": 220,
+        "x": 230,
+        "y": 180,
         "wires": [
             [
-                "db5238ac.522718"
+                "15edd0a2.6dd4bf"
             ]
         ]
     },
     {
-        "id": "1cfa5d7b.6c46a3",
+        "id": "15edd0a2.6dd4bf",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Arduino to JSON",
+        "func": "var end = msg.payload.indexOf(\"\\n\");\nvar inputString = msg.payload.substring(0,end);\nvar inputTopic = inputString.substring(inputString.indexOf(\"<topic>\") + 7, inputString.indexOf(\"</topic>\"));\nvar inputPayload = inputString.substring(inputString.indexOf(\"<payload>\") + 9, inputString.indexOf(\"</payload>\"));\nreturn {'topic':inputTopic, 'payload':inputPayload};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 400,
+        "y": 180,
+        "wires": [
+            [
+                "c38af984.72f3a8"
+            ]
+        ]
+    },
+    {
+        "id": "93049b70.2dc5c8",
+        "type": "mqtt out",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "broker": "79250bf3.365cc4",
+        "x": 850,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c38af984.72f3a8",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Add test/dma/ to topic",
+        "func": "msg.topic = 'test/dma/' + msg.topic;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 640,
+        "y": 180,
+        "wires": [
+            [
+                "93049b70.2dc5c8"
+            ]
+        ]
+    },
+    {
+        "id": "3f988ea4.7ee392",
+        "type": "serial out",
+        "z": "5f562f66.a301e",
+        "name": "Teensy",
+        "serial": "21ff842d.62f36c",
+        "x": 920,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "28bf5baa.b0eb34",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Json to Arduino",
+        "func": "var sendString = '<topic>' + msg.topic + '</topic><payload>' + msg.payload.toString() + '</payload>';\nreturn {'topic':'topic','payload':sendString};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 40,
+        "wires": [
+            [
+                "3f988ea4.7ee392"
+            ]
+        ]
+    },
+    {
+        "id": "8cda9011.eab33",
+        "type": "mqtt in",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "test/ui/#",
+        "qos": "0",
+        "broker": "79250bf3.365cc4",
+        "x": 220,
+        "y": 40,
+        "wires": [
+            [
+                "cae60544.489e58"
+            ]
+        ]
+    },
+    {
+        "id": "cae60544.489e58",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Strip test/ui/ from topic",
+        "func": "msg.topic = msg.topic.substring(msg.topic.indexOf('test/ui/') + 9);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 410,
+        "y": 40,
+        "wires": [
+            [
+                "28bf5baa.b0eb34",
+                "3ca7501.94de1b"
+            ]
+        ]
+    },
+    {
+        "id": "3ca7501.94de1b",
         "type": "debug",
         "z": "5f562f66.a301e",
         "name": "",
@@ -185,71 +259,9 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "x": 770,
-        "y": 220,
+        "complete": "false",
+        "x": 660,
+        "y": 100,
         "wires": []
-    },
-    {
-        "id": "cf17dffd.b2b37",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Convert To Json to Arduino Input",
-        "func": "var sendString = '<topic>' + msg.topic + '</topic><payload>' + msg.payload.toString() + '</payload>';\nreturn {'topic':'topic','payload':sendString};",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 720,
-        "y": 120,
-        "wires": [
-            [
-                "77ac95b9.d96e8c"
-            ]
-        ]
-    },
-    {
-        "id": "db5238ac.522718",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Convert Arduino Ouput to JSON",
-        "func": "var end = msg.payload.indexOf(\"!\");\nvar inputString = msg.payload.substring(0,end);\nvar inputTopic = inputString.substring(inputString.indexOf(\"<topic>\") + 7, inputString.indexOf(\"</topic>\"));\nvar inputPayload = inputString.substring(inputString.indexOf(\"<payload>\") + 9, inputString.indexOf(\"</payload>\"));\nreturn {'topic':inputTopic, 'payload':inputPayload};",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 470,
-        "y": 220,
-        "wires": [
-            [
-                "1cfa5d7b.6c46a3",
-                "b466e887.d9fb58"
-            ]
-        ]
-    },
-    {
-        "id": "b466e887.d9fb58",
-        "type": "mqtt out",
-        "z": "5f562f66.a301e",
-        "name": "",
-        "topic": "loopTime",
-        "qos": "0",
-        "retain": "false",
-        "broker": "79250bf3.365cc4",
-        "x": 790,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "9c868d53.8a0e",
-        "type": "mqtt in",
-        "z": "5f562f66.a301e",
-        "name": "",
-        "topic": "getLoopTime",
-        "qos": "0",
-        "broker": "79250bf3.365cc4",
-        "x": 290,
-        "y": 60,
-        "wires": [
-            [
-                "cf17dffd.b2b37"
-            ]
-        ]
     }
 ]
