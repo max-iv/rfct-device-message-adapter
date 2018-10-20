@@ -99,8 +99,8 @@
         "id": "21ff842d.62f36c",
         "type": "serial-port",
         "z": "",
-        "serialport": "/dev/ttyACM0",
-        "serialbaud": "9600",
+        "serialport": "/dev/ttyS0",
+        "serialbaud": "115200",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
@@ -114,8 +114,8 @@
         "id": "79250bf3.365cc4",
         "type": "mqtt-broker",
         "z": "",
-        "name": "teensy-pi0-platform-broker",
-        "broker": "broker.shiftr.io",
+        "name": "blinky-lite-15",
+        "broker": "blinky-lite-15.local",
         "port": "1883",
         "clientid": "dma",
         "usetls": false,
@@ -138,8 +138,8 @@
         "z": "5f562f66.a301e",
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
-        "x": 230,
-        "y": 180,
+        "x": 150,
+        "y": 440,
         "wires": [
             [
                 "15edd0a2.6dd4bf"
@@ -154,8 +154,8 @@
         "func": "var end = msg.payload.indexOf(\"\\n\");\nvar inputString = msg.payload.substring(0,end);\nvar inputTopic = inputString.substring(inputString.indexOf(\"<topic>\") + 7, inputString.indexOf(\"</topic>\"));\nvar inputPayload = inputString.substring(inputString.indexOf(\"<payload>\") + 9, inputString.indexOf(\"</payload>\"));\nreturn {'topic':inputTopic, 'payload':inputPayload};",
         "outputs": 1,
         "noerr": 0,
-        "x": 400,
-        "y": 180,
+        "x": 320,
+        "y": 440,
         "wires": [
             [
                 "c38af984.72f3a8"
@@ -171,8 +171,8 @@
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 850,
-        "y": 180,
+        "x": 770,
+        "y": 440,
         "wires": []
     },
     {
@@ -183,8 +183,8 @@
         "func": "msg.topic = 'test/dma/' + msg.topic;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 640,
-        "y": 180,
+        "x": 560,
+        "y": 440,
         "wires": [
             [
                 "93049b70.2dc5c8"
@@ -197,7 +197,7 @@
         "z": "5f562f66.a301e",
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
-        "x": 920,
+        "x": 660,
         "y": 40,
         "wires": []
     },
@@ -209,7 +209,7 @@
         "func": "var sendString = '<topic>' + msg.topic + '</topic><payload>' + msg.payload.toString() + '</payload>';\nreturn {'topic':'topic','payload':sendString};",
         "outputs": 1,
         "noerr": 0,
-        "x": 690,
+        "x": 480,
         "y": 40,
         "wires": [
             [
@@ -225,7 +225,7 @@
         "topic": "test/ui/#",
         "qos": "0",
         "broker": "79250bf3.365cc4",
-        "x": 220,
+        "x": 80,
         "y": 40,
         "wires": [
             [
@@ -241,12 +241,11 @@
         "func": "msg.topic = msg.topic.substring(msg.topic.indexOf('test/ui/') + 9);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 410,
+        "x": 270,
         "y": 40,
         "wires": [
             [
-                "28bf5baa.b0eb34",
-                "3ca7501.94de1b"
+                "28bf5baa.b0eb34"
             ]
         ]
     },
@@ -260,8 +259,68 @@
         "console": false,
         "tostatus": false,
         "complete": "false",
-        "x": 660,
-        "y": 100,
+        "x": 370,
+        "y": 540,
         "wires": []
+    },
+    {
+        "id": "3080a59e.06803a",
+        "type": "inject",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "getLedState",
+        "payload": "1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "x": 240,
+        "y": 140,
+        "wires": [
+            [
+                "28bf5baa.b0eb34"
+            ]
+        ]
+    },
+    {
+        "id": "f1cdc810.9d44c8",
+        "type": "inject",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "getLedValue",
+        "payload": "1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1.2",
+        "x": 240,
+        "y": 180,
+        "wires": [
+            [
+                "28bf5baa.b0eb34"
+            ]
+        ]
+    },
+    {
+        "id": "76ca5992.544688",
+        "type": "inject",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "getLedPeriod",
+        "payload": "1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1.4",
+        "x": 240,
+        "y": 220,
+        "wires": [
+            [
+                "28bf5baa.b0eb34"
+            ]
+        ]
     }
 ]
