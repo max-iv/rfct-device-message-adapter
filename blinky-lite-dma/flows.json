@@ -213,7 +213,8 @@
         "y": 40,
         "wires": [
             [
-                "3f988ea4.7ee392"
+                "3f988ea4.7ee392",
+                "3ca7501.94de1b"
             ]
         ]
     },
@@ -238,7 +239,7 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Strip test/ui/ from topic",
-        "func": "msg.topic = msg.topic.substring(msg.topic.indexOf('test/ui/') + 9);\nreturn msg;",
+        "func": "msg.topic = msg.topic.substring(msg.topic.indexOf('test/ui/') + 8);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 270,
@@ -259,8 +260,8 @@
         "console": false,
         "tostatus": false,
         "complete": "false",
-        "x": 370,
-        "y": 540,
+        "x": 530,
+        "y": 180,
         "wires": []
     },
     {
