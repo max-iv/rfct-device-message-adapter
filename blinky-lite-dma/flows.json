@@ -2,7 +2,7 @@
     {
         "id": "5f562f66.a301e",
         "type": "tab",
-        "label": "dma",
+        "label": "dma2",
         "disabled": false,
         "info": ""
     },
@@ -117,7 +117,7 @@
         "name": "blinky-lite-15",
         "broker": "blinky-lite-15.local",
         "port": "1883",
-        "clientid": "dma",
+        "clientid": "dma2",
         "usetls": false,
         "compatmode": true,
         "keepalive": "60",
@@ -158,8 +158,7 @@
         "y": 440,
         "wires": [
             [
-                "c38af984.72f3a8",
-                "3ca7501.94de1b"
+                "c38af984.72f3a8"
             ]
         ]
     },
@@ -180,11 +179,11 @@
         "id": "c38af984.72f3a8",
         "type": "function",
         "z": "5f562f66.a301e",
-        "name": "Add test/dma/ to topic",
-        "func": "msg.topic = 'test/dma/' + msg.topic;\nreturn msg;",
+        "name": "Add demo/dma/ui/ to topic",
+        "func": "msg.topic = 'demo/dma2/ui/' + msg.topic;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 560,
+        "x": 570,
         "y": 440,
         "wires": [
             [
@@ -198,7 +197,7 @@
         "z": "5f562f66.a301e",
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
-        "x": 660,
+        "x": 780,
         "y": 40,
         "wires": []
     },
@@ -210,7 +209,7 @@
         "func": "var sendString = '<topic>' + msg.topic + '</topic><payload>' + msg.payload.toString() + '</payload>';\nreturn {'topic':'topic','payload':sendString};",
         "outputs": 1,
         "noerr": 0,
-        "x": 480,
+        "x": 600,
         "y": 40,
         "wires": [
             [
@@ -223,10 +222,10 @@
         "type": "mqtt in",
         "z": "5f562f66.a301e",
         "name": "",
-        "topic": "test/ui/#",
+        "topic": "demo/ui/dma2/#",
         "qos": "0",
         "broker": "79250bf3.365cc4",
-        "x": 80,
+        "x": 110,
         "y": 40,
         "wires": [
             [
@@ -238,31 +237,17 @@
         "id": "cae60544.489e58",
         "type": "function",
         "z": "5f562f66.a301e",
-        "name": "Strip test/ui/ from topic",
-        "func": "msg.topic = msg.topic.substring(msg.topic.indexOf('test/ui/') + 8);\nreturn msg;",
+        "name": "Strip demo/ui/dma2 from topic",
+        "func": "msg.topic = msg.topic.substring(msg.topic.indexOf('demo/ui/dma2/') + 13);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 270,
+        "x": 350,
         "y": 40,
         "wires": [
             [
                 "28bf5baa.b0eb34"
             ]
         ]
-    },
-    {
-        "id": "3ca7501.94de1b",
-        "type": "debug",
-        "z": "5f562f66.a301e",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 570,
-        "y": 360,
-        "wires": []
     },
     {
         "id": "3080a59e.06803a",
@@ -276,7 +261,7 @@
         "crontab": "",
         "once": true,
         "onceDelay": "1",
-        "x": 240,
+        "x": 340,
         "y": 140,
         "wires": [
             [
@@ -296,7 +281,7 @@
         "crontab": "",
         "once": true,
         "onceDelay": "1.2",
-        "x": 240,
+        "x": 340,
         "y": 180,
         "wires": [
             [
@@ -316,7 +301,7 @@
         "crontab": "",
         "once": true,
         "onceDelay": "1.4",
-        "x": 240,
+        "x": 340,
         "y": 220,
         "wires": [
             [
