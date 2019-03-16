@@ -114,10 +114,10 @@
         "id": "79250bf3.365cc4",
         "type": "mqtt-broker",
         "z": "",
-        "name": "blinky-lite-14",
-        "broker": "blinky-lite-14.local",
+        "name": "blinky-lite-controlbox-xx",
+        "broker": "blinky-lite-controlbox-xx.local",
         "port": "1883",
-        "clientid": "dma2",
+        "clientid": "blinky-lite-demo-dm2",
         "usetls": false,
         "compatmode": true,
         "keepalive": "60",
@@ -138,7 +138,7 @@
         "z": "5f562f66.a301e",
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
-        "x": 150,
+        "x": 70,
         "y": 440,
         "wires": [
             [
@@ -151,14 +151,14 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Arduino to JSON",
-        "func": "var end = msg.payload.indexOf(\"\\n\");\nvar inputString = msg.payload.substring(0,end);\nvar inputTopic = inputString.substring(inputString.indexOf(\"<topic>\") + 7, inputString.indexOf(\"</topic>\"));\nvar inputPayload = inputString.substring(inputString.indexOf(\"<payload>\") + 9, inputString.indexOf(\"</payload>\"));\nreturn {'topic':inputTopic, 'payload':inputPayload};",
+        "func": "var end = msg.payload.indexOf(\"\\n\");\nvar inputString = msg.payload.substring(0,end);\nvar inputTopic = inputString.substring(inputString.indexOf(\"<topic>\") + 7, inputString.indexOf(\"</topic>\"));\nvar inputPayload = inputString.substring(inputString.indexOf(\"<payload>\") + 9, inputString.indexOf(\"</payload>\"));\nreturn {topic:inputTopic, payload:inputPayload};",
         "outputs": 1,
         "noerr": 0,
-        "x": 320,
+        "x": 230,
         "y": 440,
         "wires": [
             [
-                "c38af984.72f3a8"
+                "538ccb1c.841bf4"
             ]
         ]
     },
@@ -171,19 +171,19 @@
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 770,
-        "y": 440,
+        "x": 750,
+        "y": 500,
         "wires": []
     },
     {
         "id": "c38af984.72f3a8",
         "type": "function",
         "z": "5f562f66.a301e",
-        "name": "Add demo/dma/ui/ to topic",
-        "func": "msg.topic = 'demo/dma2/ui/' + msg.topic;\nreturn msg;",
+        "name": "Add archiver topic ",
+        "func": "var newMsg = \n{\n    topic: 'archiver/blinky-lite/demo/dma/2/gizmo/' + msg.topic + '/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        \"value\":msg.payload\n    }\n}\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 570,
+        "x": 770,
         "y": 440,
         "wires": [
             [
@@ -308,5 +308,104 @@
                 "28bf5baa.b0eb34"
             ]
         ]
+    },
+    {
+        "id": "538ccb1c.841bf4",
+        "type": "switch",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "photoDetValue",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ultraDistance",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "tempAvg",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ledState",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 390,
+        "y": 440,
+        "wires": [
+            [
+                "a565d86c.d773f8"
+            ],
+            [
+                "c38af984.72f3a8"
+            ],
+            [
+                "c38af984.72f3a8"
+            ],
+            [
+                "c38af984.72f3a8"
+            ]
+        ]
+    },
+    {
+        "id": "a565d86c.d773f8",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Scale photoDetValue",
+        "func": "msg.payload = (1000.0 - msg.payload) / 10;\nmsg.payload = Math.round(100 * msg.payload) / 100;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 400,
+        "wires": [
+            [
+                "c38af984.72f3a8"
+            ]
+        ]
+    },
+    {
+        "id": "67d8952c.30d64c",
+        "type": "inject",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "topic": "",
+        "payload": "NODEREDCONFIGSECRET",
+        "payloadType": "env",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "754bd9d8.77b1b8"
+            ]
+        ]
+    },
+    {
+        "id": "754bd9d8.77b1b8",
+        "type": "debug",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 330,
+        "y": 300,
+        "wires": []
     }
 ]
