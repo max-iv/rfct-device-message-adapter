@@ -2,7 +2,7 @@
     {
         "id": "5f562f66.a301e",
         "type": "tab",
-        "label": "dma2",
+        "label": "device-message-adapter",
         "disabled": false,
         "info": ""
     },
@@ -114,10 +114,10 @@
         "id": "79250bf3.365cc4",
         "type": "mqtt-broker",
         "z": "",
-        "name": "blinky-lite-controlbox-xx",
-        "broker": "blinky-lite-controlbox-xx.local",
+        "name": "blinky-lite-controlbox",
+        "broker": "$(MQTTSERVERIP)",
         "port": "1883",
-        "clientid": "blinky-lite-demo-dm2",
+        "clientid": "$(MQTTCLIENTID)",
         "usetls": false,
         "compatmode": true,
         "keepalive": "60",
@@ -139,7 +139,7 @@
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
         "x": 70,
-        "y": 440,
+        "y": 280,
         "wires": [
             [
                 "15edd0a2.6dd4bf"
@@ -155,7 +155,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 230,
-        "y": 440,
+        "y": 280,
         "wires": [
             [
                 "538ccb1c.841bf4"
@@ -166,13 +166,13 @@
         "id": "93049b70.2dc5c8",
         "type": "mqtt out",
         "z": "5f562f66.a301e",
-        "name": "",
+        "name": "blinky-lite-controlbox",
         "topic": "",
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 750,
-        "y": 500,
+        "x": 780,
+        "y": 340,
         "wires": []
     },
     {
@@ -180,11 +180,11 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Add archiver topic ",
-        "func": "var newMsg = \n{\n    topic: 'archiver/blinky-lite/demo/dma/2/gizmo/' + msg.topic + '/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        \"value\":msg.payload\n    }\n}\nreturn newMsg;",
+        "func": "var newMsg = \n{\n    topic: flow.get('archiverTopic') + msg.topic + '/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        \"value\":msg.payload\n    }\n}\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
         "x": 770,
-        "y": 440,
+        "y": 280,
         "wires": [
             [
                 "93049b70.2dc5c8"
@@ -261,8 +261,8 @@
         "crontab": "",
         "once": true,
         "onceDelay": "1",
-        "x": 340,
-        "y": 140,
+        "x": 320,
+        "y": 80,
         "wires": [
             [
                 "28bf5baa.b0eb34"
@@ -281,8 +281,8 @@
         "crontab": "",
         "once": true,
         "onceDelay": "1.2",
-        "x": 340,
-        "y": 180,
+        "x": 320,
+        "y": 120,
         "wires": [
             [
                 "28bf5baa.b0eb34"
@@ -301,8 +301,8 @@
         "crontab": "",
         "once": true,
         "onceDelay": "1.4",
-        "x": 340,
-        "y": 220,
+        "x": 320,
+        "y": 160,
         "wires": [
             [
                 "28bf5baa.b0eb34"
@@ -342,7 +342,7 @@
         "repair": false,
         "outputs": 4,
         "x": 390,
-        "y": 440,
+        "y": 280,
         "wires": [
             [
                 "a565d86c.d773f8"
@@ -367,7 +367,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 560,
-        "y": 400,
+        "y": 240,
         "wires": [
             [
                 "c38af984.72f3a8"
@@ -380,32 +380,32 @@
         "z": "5f562f66.a301e",
         "name": "",
         "topic": "",
-        "payload": "NODEREDCONFIGSECRET",
+        "payload": "ARCHIVERTOPIC",
         "payloadType": "env",
         "repeat": "",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
-        "x": 170,
-        "y": 300,
+        "x": 90,
+        "y": 200,
         "wires": [
             [
-                "754bd9d8.77b1b8"
+                "8c56d93.5ceb628"
             ]
         ]
     },
     {
-        "id": "754bd9d8.77b1b8",
-        "type": "debug",
+        "id": "8c56d93.5ceb628",
+        "type": "function",
         "z": "5f562f66.a301e",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 330,
-        "y": 300,
-        "wires": []
+        "name": "Set Archiver Topic",
+        "func": "flow.set('archiverTopic',msg.payload)\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 280,
+        "y": 200,
+        "wires": [
+            []
+        ]
     }
 ]
