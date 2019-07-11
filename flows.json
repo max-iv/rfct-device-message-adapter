@@ -114,7 +114,7 @@
         "id": "79250bf3.365cc4",
         "type": "mqtt-broker",
         "z": "",
-        "name": "blinky-lite-controlbox",
+        "name": "shiftr.io",
         "broker": "$(MQTTSERVERIP)",
         "port": "1883",
         "clientid": "$(MQTTCLIENTID)",
@@ -150,12 +150,12 @@
         "id": "93049b70.2dc5c8",
         "type": "mqtt out",
         "z": "5f562f66.a301e",
-        "name": "blinky-lite-controlbox",
+        "name": "shiftr.io",
         "topic": "",
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 740,
+        "x": 680,
         "y": 280,
         "wires": []
     },
@@ -180,9 +180,7 @@
         "x": 210,
         "y": 40,
         "wires": [
-            [
-                "c0f4b91f.7babb8"
-            ]
+            []
         ]
     },
     {
@@ -191,7 +189,7 @@
         "z": "5f562f66.a301e",
         "name": "",
         "topic": "",
-        "payload": "ARCHIVERTOPIC",
+        "payload": "DEVICENAME",
         "payloadType": "env",
         "repeat": "",
         "crontab": "",
@@ -209,11 +207,11 @@
         "id": "8c56d93.5ceb628",
         "type": "function",
         "z": "5f562f66.a301e",
-        "name": "Set Archiver Topic",
-        "func": "flow.set('archiverTopic',msg.payload)\nreturn null;",
+        "name": "Set Device Structure",
+        "func": "var device = \n{\n    name        : msg.payload,\n    arcPeriod   : 60000,\n    timeStamp   : 0,\n    lastArchive : 0,\n    readings    : \n    [ \n        { attr : 'ledState',    type : 'scalar',    value : 0,  unit : 'unit',  alarm : {value : 0, limits: {lolo : 0.0,    low : 0.5,  high : 1.0,     hihi : 2.0 } } },\n        { attr : 'photoDet',    type : 'scalar',    value : 0,  unit : '%',     alarm : {value : 0, limits: {lolo : 10,     low : 20,   high : 80,      hihi : 90  } } },\n        { attr : 'temperature', type : 'scalar',    value : 0,  unit : 'C',     alarm : {value : 0, limits: {lolo : 10,     low : 20,   high : 30,      hihi : 40  } } },\n        { attr : 'ultraDist',   type : 'scalar',    value : 0,  unit : 'cm',    alarm : {value : 0, limits: {lolo : 1,      low : 10,   high : 20,      hihi : 40  } } },\n    ],\n    settings    :\n    [ \n        { attr : 'ledPeriod',   type : 'scalar',    value : 0,  unit : 'mS',    alarm : {value : 0, limits: {lolo : 100,    low : 200,  high : 1800,    hihi : 1900} } },\n        { attr : 'ledState',    type : 'scalar',    value : 0,  unit : 'unit',  alarm : {value : 0, limits: {lolo : 0.0,    low : 0.5,  high : 1.0,     hihi : 2.0 } } },\n        { attr : 'ledValue',    type : 'scalar',    value : 0,  unit : 'unit',  alarm : {value : 0, limits: {lolo : 10,     low : 20,   high : 235,     hihi : 245 } } },\n        { attr : 'ultraAlarm',  type : 'scalar',    value : 0,  unit : 'cm',    alarm : {value : 0, limits: {lolo : 1,      low : 10,   high : 20,      hihi : 40  } } },\n    ]\n};\nflow.set('device', device);\n\nreturn {topic : 'deviceRecord', payload : device};\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 280,
+        "x": 290,
         "y": 200,
         "wires": [
             []
@@ -224,32 +222,14 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Parse Reading Byte Array",
-        "func": "var ib;\nvar archiverTopic = flow.get('archiverTopic');\n\nvar photoDetValueView       = new DataView(new ArrayBuffer(4));\nvar ultraDistanceView       = new DataView(new ArrayBuffer(4));\nvar ultraAlarmDistanceView  = new DataView(new ArrayBuffer(4));\nvar tempAvgView             = new DataView(new ArrayBuffer(4));\nvar ledStateView            = new DataView(new ArrayBuffer(4));\nvar ledValueView            = new DataView(new ArrayBuffer(4));\nvar ledPeriodView           = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)      photoDetValueView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)      ultraDistanceView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib) ultraAlarmDistanceView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)            tempAvgView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledStateView.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledValueView.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)          ledPeriodView.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\nvar photoDetValueMsg = \n{\n    topic: flow.get('archiverTopic') + 'photoDet/value/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:photoDetValueView.getInt32(0)\n    }\n};\nvar ultraDistanceMsg = \n{\n    topic: flow.get('archiverTopic') + 'ultraDistance/value/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:ultraDistanceView.getInt32(0)\n    }\n};\nvar ultraAlarmDistanceMsg = \n{\n    topic: flow.get('archiverTopic') + 'ultraDistance/alarm/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:ultraAlarmDistanceView.getInt32(0)\n    }\n};\nvar tempAvgMsg = \n{\n    topic: flow.get('archiverTopic') + 'temperature/average/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:Math.round(100.0 * tempAvgView.getFloat32(0)) / 100.0\n    }\n};\nvar ledStateMsg = \n{\n    topic: flow.get('archiverTopic') + 'led/state/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:ledStateView.getInt32(0)\n    }\n};\nvar ledValueMsg = \n{\n    topic: flow.get('archiverTopic') + 'led/value/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:ledValueView.getInt32(0)\n    }\n};\nvar ledPeriodMsg = \n{\n    topic: flow.get('archiverTopic') + 'led/period/reading',\n    payload : \n    {   \n        type :\"scalar\",\n        value:ledPeriodView.getInt32(0)\n    }\n};\nreturn [\n    photoDetValueMsg, \n    ultraDistanceMsg, \n    ultraAlarmDistanceMsg, \n    tempAvgMsg, \n    ledStateMsg, \n    ledValueMsg, \n    ledPeriodMsg];\n",
-        "outputs": 7,
+        "func": "var ib;\n\nvar photoDetValueView       = new DataView(new ArrayBuffer(4));\nvar ultraDistanceView       = new DataView(new ArrayBuffer(4));\nvar ultraAlarmDistanceView  = new DataView(new ArrayBuffer(4));\nvar tempAvgView             = new DataView(new ArrayBuffer(4));\nvar ledStateView            = new DataView(new ArrayBuffer(4));\nvar ledValueView            = new DataView(new ArrayBuffer(4));\nvar ledPeriodView           = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)      photoDetValueView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)      ultraDistanceView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib) ultraAlarmDistanceView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)            tempAvgView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledStateView.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledValueView.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)          ledPeriodView.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\nvar device = flow.get('device');\ndevice.readings[0].value = ledStateView.getInt32(0);\ndevice.readings[1].value = photoDetValueView.getInt32(0);\ndevice.readings[2].value = Math.round(100.0 * tempAvgView.getFloat32(0)) / 100.0;\ndevice.readings[3].value = ultraDistanceView.getInt32(0);\n\nreturn {topic : device.name + '/reading', payload : device}\n",
+        "outputs": 1,
         "noerr": 0,
         "x": 270,
         "y": 280,
         "wires": [
             [
-                "a2a0965a.0faa78"
-            ],
-            [
-                "a2a0965a.0faa78"
-            ],
-            [
-                "a2a0965a.0faa78"
-            ],
-            [
-                "a2a0965a.0faa78"
-            ],
-            [
-                "a2a0965a.0faa78"
-            ],
-            [
-                "a2a0965a.0faa78"
-            ],
-            [
-                "a2a0965a.0faa78"
+                "e0779f99.2f62b"
             ]
         ]
     },
@@ -322,17 +302,14 @@
         ]
     },
     {
-        "id": "a2a0965a.0faa78",
-        "type": "batch",
+        "id": "e0779f99.2f62b",
+        "type": "function",
         "z": "5f562f66.a301e",
-        "name": "",
-        "mode": "interval",
-        "count": 10,
-        "overlap": 0,
-        "interval": "1",
-        "allowEmptySequence": false,
-        "topics": [],
-        "x": 530,
+        "name": "Check Reading Alarms",
+        "func": "for (var ii = 0; ii < msg.payload.readings.length; ++ii)\n{\n    if (msg.payload.readings[ii].type == 'scalar')\n    {\n        msg.payload.readings[ii].alarm.value = 0;\n        if (!isNaN(msg.payload.readings[ii].value))\n        {\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.low)  msg.payload.readings[ii].alarm.value = 1;\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.lolo) msg.payload.readings[ii].alarm.value = 3;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.high) msg.payload.readings[ii].alarm.value = 2;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.hihi) msg.payload.readings[ii].alarm.value = 4;\n        }\n    }\n}\nflow.set('device', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
         "y": 280,
         "wires": [
             [
