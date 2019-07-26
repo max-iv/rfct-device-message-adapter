@@ -114,7 +114,7 @@
         "id": "79250bf3.365cc4",
         "type": "mqtt-broker",
         "z": "",
-        "name": "shiftr.io",
+        "name": "MQTT Broker",
         "broker": "$(MQTTSERVERIP)",
         "port": "1883",
         "clientid": "$(MQTTCLIENTID)",
@@ -142,7 +142,7 @@
         "y": 280,
         "wires": [
             [
-                "491cada6.3fe584"
+                "d5761f6c.c46e6"
             ]
         ]
     },
@@ -150,12 +150,12 @@
         "id": "93049b70.2dc5c8",
         "type": "mqtt out",
         "z": "5f562f66.a301e",
-        "name": "shiftr.io",
-        "topic": "",
+        "name": "Publish Readings",
+        "topic": "$(MQTTPUBLISHTOPIC)",
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 680,
+        "x": 710,
         "y": 280,
         "wires": []
     },
@@ -165,7 +165,7 @@
         "z": "5f562f66.a301e",
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
-        "x": 580,
+        "x": 1120,
         "y": 120,
         "wires": []
     },
@@ -173,75 +173,61 @@
         "id": "8cda9011.eab33",
         "type": "mqtt in",
         "z": "5f562f66.a301e",
-        "name": "",
-        "topic": "archiver/blinky-lite/demo/breadboard/+/+/+/setting",
+        "name": "Subscribe Settings",
+        "topic": "$(MQTTSUBSCRIBETOPIC)",
         "qos": "0",
+        "datatype": "auto",
         "broker": "79250bf3.365cc4",
-        "x": 210,
+        "x": 110,
+        "y": 40,
+        "wires": [
+            [
+                "dc36009e.fdeeb"
+            ]
+        ]
+    },
+    {
+        "id": "dc36009e.fdeeb",
+        "type": "json",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 270,
+        "y": 40,
+        "wires": [
+            [
+                "f3f3f15.081c31",
+                "5902d0c0.241a6"
+            ]
+        ]
+    },
+    {
+        "id": "5902d0c0.241a6",
+        "type": "file",
+        "z": "5f562f66.a301e",
+        "name": "Write initSettings.json",
+        "filename": "initSettings.json",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 980,
         "y": 40,
         "wires": [
             []
         ]
     },
     {
-        "id": "67d8952c.30d64c",
-        "type": "inject",
-        "z": "5f562f66.a301e",
-        "name": "",
-        "topic": "",
-        "payload": "DEVICENAME",
-        "payloadType": "env",
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "x": 90,
-        "y": 200,
-        "wires": [
-            [
-                "8c56d93.5ceb628"
-            ]
-        ]
-    },
-    {
-        "id": "8c56d93.5ceb628",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Set Device Structure",
-        "func": "var device = \n{\n    name        : msg.payload,\n    arcPeriod   : 60000,\n    timeStamp   : 0,\n    lastArchive : 0,\n    readings    : \n    [ \n        { attr : 'ledState',    type : 'scalar',    value : 0,  unit : 'unit',  alarm : {value : 0, limits: {lolo : 0.0,    low : 0.5,  high : 1.0,     hihi : 2.0 } } },\n        { attr : 'photoDet',    type : 'scalar',    value : 0,  unit : '%',     alarm : {value : 0, limits: {lolo : 10,     low : 20,   high : 80,      hihi : 90  } } },\n        { attr : 'temperature', type : 'scalar',    value : 0,  unit : 'C',     alarm : {value : 0, limits: {lolo : 10,     low : 20,   high : 30,      hihi : 40  } } },\n        { attr : 'ultraDist',   type : 'scalar',    value : 0,  unit : 'cm',    alarm : {value : 0, limits: {lolo : 1,      low : 10,   high : 20,      hihi : 40  } } },\n    ],\n    settings    :\n    [ \n        { attr : 'ledPeriod',   type : 'scalar',    value : 0,  unit : 'mS',    alarm : {value : 0, limits: {lolo : 100,    low : 200,  high : 1800,    hihi : 1900} } },\n        { attr : 'ledState',    type : 'scalar',    value : 0,  unit : 'unit',  alarm : {value : 0, limits: {lolo : 0.0,    low : 0.5,  high : 1.0,     hihi : 2.0 } } },\n        { attr : 'ledValue',    type : 'scalar',    value : 0,  unit : 'unit',  alarm : {value : 0, limits: {lolo : 10,     low : 20,   high : 235,     hihi : 245 } } },\n        { attr : 'ultraAlarm',  type : 'scalar',    value : 0,  unit : 'cm',    alarm : {value : 0, limits: {lolo : 1,      low : 10,   high : 20,      hihi : 40  } } },\n    ]\n};\nflow.set('device', device);\n\nreturn {topic : 'deviceRecord', payload : device};\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 290,
-        "y": 200,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "491cada6.3fe584",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Parse Reading Byte Array",
-        "func": "var ib;\n\nvar photoDetValueView       = new DataView(new ArrayBuffer(4));\nvar ultraDistanceView       = new DataView(new ArrayBuffer(4));\nvar ultraAlarmDistanceView  = new DataView(new ArrayBuffer(4));\nvar tempAvgView             = new DataView(new ArrayBuffer(4));\nvar ledStateView            = new DataView(new ArrayBuffer(4));\nvar ledValueView            = new DataView(new ArrayBuffer(4));\nvar ledPeriodView           = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)      photoDetValueView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)      ultraDistanceView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib) ultraAlarmDistanceView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)            tempAvgView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledStateView.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledValueView.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)          ledPeriodView.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\nvar device = flow.get('device');\ndevice.readings[0].value = ledStateView.getInt32(0);\ndevice.readings[1].value = photoDetValueView.getInt32(0);\ndevice.readings[2].value = Math.round(100.0 * tempAvgView.getFloat32(0)) / 100.0;\ndevice.readings[3].value = ultraDistanceView.getInt32(0);\n\nreturn {topic : device.name + '/reading', payload : device}\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 270,
-        "y": 280,
-        "wires": [
-            [
-                "e0779f99.2f62b"
-            ]
-        ]
-    },
-    {
-        "id": "e709045e.04e398",
+        "id": "f3f3f15.081c31",
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "createSettings",
-        "func": "var echoSettings = 0;\nvar ledState = 0;\nvar ledValue = 0;\nvar ledPeriod = 0;\nvar ultraAlarmDistance = 0;\n\nvar echoSettingsMask = 0;\nvar ledStateMask = 0;\nvar ledValueMask = 0;\nvar ledPeriodMask = 0;\nvar ultraAlarmDistanceMask = 0;\n\nswitch(msg.topic) \n{\n  case 'echoSettings':\n    echoSettings = msg.payload;\n    echoSettingsMask = 1;\n    break;\n  case 'led/state':\n    ledState = msg.payload;\n    ledStateMask = 1;\n    break;\n  case 'led/value':\n    ledValue = msg.payload;\n    ledValueMask = 1;\n    break;\n  case 'led/period':\n    ledPeriod = msg.payload;\n    ledPeriodMask = 1;\n    break;\n  case 'ultraDistance/alarm':\n    ultraAlarmDistance = msg.payload;\n    ultraAlarmDistanceMask = 1;\n    break;\n  default:\n}\n\nvar buffer = new ArrayBuffer(40);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0,echoSettingsMask, true);\nsettingsView.setInt32(4,ledStateMask, true);\nsettingsView.setInt32(8,ledValueMask, true);\nsettingsView.setInt32(12,ledPeriodMask, true);\nsettingsView.setInt32(16,ultraAlarmDistanceMask, true);\n\nsettingsView.setInt32(20,echoSettings, true);\nsettingsView.setInt32(24,ledState, true);\nsettingsView.setInt32(28,ledValue, true);\nsettingsView.setInt32(32,ledPeriod, true);\nsettingsView.setInt32(36,ultraAlarmDistance, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};",
+        "func": "function getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\nvar echoSettings = 0;\nvar ledState = 0;\nvar ledValue = 0;\nvar ledPeriod = 0;\nvar ultraAlarmDistance = 0;\n\nvar echoSettingsMask = 0;\nvar ledStateMask = 0;\nvar ledValueMask = 0;\nvar ledPeriodMask = 0;\nvar ultraAlarmDistanceMask = 0;\nif (msg.topic == 'echoSettings')\n{\n    echoSettings = msg.payload;\n    echoSettingsMask = 1;\n}\nelse\n{\n    var device = msg.payload;\n    ledState = getAttrObject(device, 'settings', 'ledState').value;\n    ledValue = getAttrObject(device, 'settings', 'ledValue').value;\n    ledPeriod = getAttrObject(device, 'settings', 'ledPeriod').value;\n    ultraAlarmDistance = getAttrObject(device, 'settings', 'ultraAlarm').value;\n    var ultraDist = getAttrObject(device, 'readings', 'ultraDist');\n    ultraDist.alarm.limits.low = ultraAlarmDistance;\n    ledStateMask = 1;\n    ledValueMask = 1;\n    ledPeriodMask = 1;\n    ultraAlarmDistanceMask = 1;\n    flow.set('device', msg.payload);    \n}\n\n\nvar buffer = new ArrayBuffer(40);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0,echoSettingsMask, true);\nsettingsView.setInt32(4,ledStateMask, true);\nsettingsView.setInt32(8,ledValueMask, true);\nsettingsView.setInt32(12,ledPeriodMask, true);\nsettingsView.setInt32(16,ultraAlarmDistanceMask, true);\n\nsettingsView.setInt32(20,echoSettings, true);\nsettingsView.setInt32(24,ledState, true);\nsettingsView.setInt32(28,ledValue, true);\nsettingsView.setInt32(32,ledPeriod, true);\nsettingsView.setInt32(36,ultraAlarmDistance, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};",
         "outputs": 1,
         "noerr": 0,
-        "x": 420,
+        "x": 960,
         "y": 120,
         "wires": [
             [
@@ -250,7 +236,7 @@
         ]
     },
     {
-        "id": "364a5e00.a610c2",
+        "id": "302aa037.053d1",
         "type": "inject",
         "z": "5f562f66.a301e",
         "name": "",
@@ -261,48 +247,102 @@
         "crontab": "",
         "once": true,
         "onceDelay": "5",
-        "x": 220,
+        "x": 120,
         "y": 120,
         "wires": [
             [
-                "e709045e.04e398"
+                "f3f3f15.081c31"
             ]
         ]
     },
     {
-        "id": "d2a72c5d.dfbc5",
-        "type": "function",
+        "id": "6eaa13e9.4147bc",
+        "type": "inject",
         "z": "5f562f66.a301e",
-        "name": "Parse Setting",
-        "func": "var archiverTopic = flow.get('archiverTopic').split('/');\nvar inputTopic =  msg.topic.split('/');\nif (archiverTopic[4] != inputTopic[4]) return null;\nreturn {topic: inputTopic[5] + '/' + inputTopic[6], payload:msg.payload.value};",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 620,
-        "y": 40,
+        "name": "",
+        "topic": "initSettings",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 140,
+        "y": 200,
         "wires": [
             [
-                "e709045e.04e398"
+                "163af492.5e952b"
             ]
         ]
     },
     {
-        "id": "c0f4b91f.7babb8",
+        "id": "163af492.5e952b",
+        "type": "file in",
+        "z": "5f562f66.a301e",
+        "name": "Read initSettings.json",
+        "filename": "initSettings.json",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 360,
+        "y": 200,
+        "wires": [
+            [
+                "53c95857.5f3d68"
+            ]
+        ]
+    },
+    {
+        "id": "53c95857.5f3d68",
         "type": "json",
         "z": "5f562f66.a301e",
         "name": "",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 470,
-        "y": 40,
+        "x": 530,
+        "y": 200,
         "wires": [
             [
-                "d2a72c5d.dfbc5"
+                "30f384ea.cf21fc"
             ]
         ]
     },
     {
-        "id": "e0779f99.2f62b",
+        "id": "30f384ea.cf21fc",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Save initSettings in Memory",
+        "func": "flow.set('device', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 720,
+        "y": 200,
+        "wires": [
+            [
+                "f3f3f15.081c31"
+            ]
+        ]
+    },
+    {
+        "id": "d5761f6c.c46e6",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Parse Reading Byte Array",
+        "func": "var ib;\n\nvar photoDetValueView       = new DataView(new ArrayBuffer(4));\nvar ultraDistanceView       = new DataView(new ArrayBuffer(4));\nvar ultraAlarmDistanceView  = new DataView(new ArrayBuffer(4));\nvar tempAvgView             = new DataView(new ArrayBuffer(4));\nvar ledStateView            = new DataView(new ArrayBuffer(4));\nvar ledValueView            = new DataView(new ArrayBuffer(4));\nvar ledPeriodView           = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)      photoDetValueView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)      ultraDistanceView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib) ultraAlarmDistanceView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)            tempAvgView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledStateView.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledValueView.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)          ledPeriodView.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\nvar device = flow.get('device');\ndevice.readings[0].value = ledStateView.getInt32(0);\ndevice.readings[1].value = photoDetValueView.getInt32(0);\ndevice.readings[2].value = Math.round(100.0 * tempAvgView.getFloat32(0)) / 100.0;\ndevice.readings[3].value = ultraDistanceView.getInt32(0);\n\nreturn {topic : 'demo/' + device.name + '/reading', payload : device}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "cd04ce51.35497"
+            ]
+        ]
+    },
+    {
+        "id": "cd04ce51.35497",
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Check Reading Alarms",
