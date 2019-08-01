@@ -155,7 +155,7 @@
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 710,
+        "x": 890,
         "y": 280,
         "wires": []
     },
@@ -224,7 +224,7 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "createSettings",
-        "func": "function getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\nvar echoSettings = 0;\nvar ledState = 0;\nvar ledValue = 0;\nvar ledPeriod = 0;\nvar ultraAlarmDistance = 0;\n\nvar echoSettingsMask = 0;\nvar ledStateMask = 0;\nvar ledValueMask = 0;\nvar ledPeriodMask = 0;\nvar ultraAlarmDistanceMask = 0;\nif (msg.topic == 'echoSettings')\n{\n    echoSettings = msg.payload;\n    echoSettingsMask = 1;\n}\nelse\n{\n    var device = msg.payload;\n    ledState = getAttrObject(device, 'settings', 'ledState').value;\n    ledValue = getAttrObject(device, 'settings', 'ledValue').value;\n    ledPeriod = getAttrObject(device, 'settings', 'ledPeriod').value;\n    ultraAlarmDistance = getAttrObject(device, 'settings', 'ultraAlarm').value;\n    var ultraDist = getAttrObject(device, 'readings', 'ultraDist');\n    ultraDist.alarm.limits.low = ultraAlarmDistance;\n    ledStateMask = 1;\n    ledValueMask = 1;\n    ledPeriodMask = 1;\n    ultraAlarmDistanceMask = 1;\n    flow.set('device', msg.payload);    \n}\n\n\nvar buffer = new ArrayBuffer(40);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0,echoSettingsMask, true);\nsettingsView.setInt32(4,ledStateMask, true);\nsettingsView.setInt32(8,ledValueMask, true);\nsettingsView.setInt32(12,ledPeriodMask, true);\nsettingsView.setInt32(16,ultraAlarmDistanceMask, true);\n\nsettingsView.setInt32(20,echoSettings, true);\nsettingsView.setInt32(24,ledState, true);\nsettingsView.setInt32(28,ledValue, true);\nsettingsView.setInt32(32,ledPeriod, true);\nsettingsView.setInt32(36,ultraAlarmDistance, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};",
+        "func": "function getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\nvar echoSettings = 0;\nvar ledState = 0;\nvar ledValue = 0;\nvar ledPeriod = 0;\nvar ultraAlarmDistance = 0;\n\nvar echoSettingsMask = 0;\nvar ledStateMask = 0;\nvar ledValueMask = 0;\nvar ledPeriodMask = 0;\nvar ultraAlarmDistanceMask = 0;\nif (msg.topic == 'echoSettings')\n{\n    echoSettings = msg.payload;\n    echoSettingsMask = 1;\n}\nelse\n{\n    var device = msg.payload;\n    ledState = getAttrObject(device, 'settings', 'ledState').value;\n    ledValue = getAttrObject(device, 'settings', 'ledValue').value;\n    ledPeriod = getAttrObject(device, 'settings', 'ledPeriod').value;\n    ultraAlarmDistance = getAttrObject(device, 'settings', 'ultraAlarm').value;\n    var ultraDist = getAttrObject(device, 'readings', 'ultraDist');\n    ultraDist.alarm.limits.low = ultraAlarmDistance;\n    ledStateMask = 1;\n    ledValueMask = 1;\n    ledPeriodMask = 1;\n    ultraAlarmDistanceMask = 1;\n    for (var ii = 0; ii < msg.payload.settings.length; ++ii)\n    {\n        if (msg.payload.settings[ii].type == 'scalar')\n        {\n            msg.payload.settings[ii].alarm.value = 0;\n            if (!isNaN(msg.payload.settings[ii].value))\n            {\n                if (msg.payload.settings[ii].value < msg.payload.settings[ii].alarm.limits.low)  msg.payload.settings[ii].alarm.value = 1;\n                if (msg.payload.settings[ii].value < msg.payload.settings[ii].alarm.limits.lolo) msg.payload.settings[ii].alarm.value = 3;\n                if (msg.payload.settings[ii].value > msg.payload.settings[ii].alarm.limits.high) msg.payload.settings[ii].alarm.value = 2;\n                if (msg.payload.settings[ii].value > msg.payload.settings[ii].alarm.limits.hihi) msg.payload.settings[ii].alarm.value = 4;\n            }\n        }\n    }\n\n    flow.set('device', msg.payload);    \n}\n\n\nvar buffer = new ArrayBuffer(40);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0,echoSettingsMask, true);\nsettingsView.setInt32(4,ledStateMask, true);\nsettingsView.setInt32(8,ledValueMask, true);\nsettingsView.setInt32(12,ledPeriodMask, true);\nsettingsView.setInt32(16,ultraAlarmDistanceMask, true);\n\nsettingsView.setInt32(20,echoSettings, true);\nsettingsView.setInt32(24,ledState, true);\nsettingsView.setInt32(28,ledValue, true);\nsettingsView.setInt32(32,ledPeriod, true);\nsettingsView.setInt32(36,ultraAlarmDistance, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};",
         "outputs": 1,
         "noerr": 0,
         "x": 960,
@@ -333,11 +333,11 @@
         "func": "var ib;\n\nvar photoDetValueView       = new DataView(new ArrayBuffer(4));\nvar ultraDistanceView       = new DataView(new ArrayBuffer(4));\nvar ultraAlarmDistanceView  = new DataView(new ArrayBuffer(4));\nvar tempAvgView             = new DataView(new ArrayBuffer(4));\nvar ledStateView            = new DataView(new ArrayBuffer(4));\nvar ledValueView            = new DataView(new ArrayBuffer(4));\nvar ledPeriodView           = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)      photoDetValueView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)      ultraDistanceView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib) ultraAlarmDistanceView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)            tempAvgView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledStateView.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)           ledValueView.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)          ledPeriodView.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\nvar device = flow.get('device');\ndevice.readings[0].value = ledStateView.getInt32(0);\ndevice.readings[1].value = photoDetValueView.getInt32(0);\ndevice.readings[2].value = Math.round(100.0 * tempAvgView.getFloat32(0)) / 100.0;\ndevice.readings[3].value = ultraDistanceView.getInt32(0);\n\nreturn {topic : 'reading', payload : device}\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 270,
+        "x": 250,
         "y": 280,
         "wires": [
             [
-                "cd04ce51.35497"
+                "fafe8611.1f12e8"
             ]
         ]
     },
@@ -349,11 +349,27 @@
         "func": "for (var ii = 0; ii < msg.payload.readings.length; ++ii)\n{\n    if (msg.payload.readings[ii].type == 'scalar')\n    {\n        msg.payload.readings[ii].alarm.value = 0;\n        if (!isNaN(msg.payload.readings[ii].value))\n        {\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.low)  msg.payload.readings[ii].alarm.value = 1;\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.lolo) msg.payload.readings[ii].alarm.value = 3;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.high) msg.payload.readings[ii].alarm.value = 2;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.hihi) msg.payload.readings[ii].alarm.value = 4;\n        }\n    }\n}\nflow.set('device', msg.payload);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 500,
+        "x": 680,
         "y": 280,
         "wires": [
             [
                 "93049b70.2dc5c8"
+            ]
+        ]
+    },
+    {
+        "id": "fafe8611.1f12e8",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Fake Vector Data",
+        "func": "var x = [];\nvar y = [];\nvar npts = 51;\nvar harm = msg.payload.settings[4].value;\nvar deltaPhi = msg.payload.settings[5].value;\nvar phi = context.get('phi');\nif (phi == undefined) phi = -deltaPhi;\nphi = phi + deltaPhi;\ncontext.set('phi', phi);\nfor (var ii = 0; ii < npts; ++ii)\n{\n   x[ii] = ii * 360.0 / (npts - 1);\n   y[ii] = Math.round( 1000 * Math.cos((x[ii] * harm + phi)  * Math.PI / 180.0)) / 1000;\n}\nmsg.payload.readings[4].value[0] = x;\nmsg.payload.readings[4].value[1] = y;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 280,
+        "wires": [
+            [
+                "cd04ce51.35497"
             ]
         ]
     }
