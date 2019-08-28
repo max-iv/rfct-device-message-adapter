@@ -1,10 +1,12 @@
-# blinky-lite-demo device-message-adapter
+# rfct device-message-adapter
 ## need to add .env file with the following
-ARCHIVERTOPIC=archiver\/blinky-lite\/demo\/breadboard\/green\/<br/>
-MQTTCLIENTID=blinky-lite-demo-green-dma<br/>
-MQTTSERVERIP=blinky-lite-controlbox-01.local<br/>
-MQTTUSERNAME=blinky-lite-controlbox-01<br/>
-MQTTPASSWORD=blinky-lite<br/>
-NODEREDCONFIGSECRET=a-secret-key<br/>
+MQTTPUBLISHTOPIC=maxiv\/r3-rfct\/reading<br/>
+MQTTSUBSCRIBETOPIC=maxiv\/r3-rfct\/setting<br/>
+MQTTCLIENTID=r3-rfct-dma<br/>
+MQTTSERVERIP=broker.shiftr.io<br/>
+MQTTUSERNAME=********<br/>
+MQTTPASSWORD=********<br/>
+NODEREDCONFIGSECRET=*********<br/>
 <br/>
 with no CR after the last line
+
