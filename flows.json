@@ -155,7 +155,7 @@
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 890,
+        "x": 1130,
         "y": 280,
         "wires": []
     },
@@ -199,7 +199,7 @@
         "wires": [
             [
                 "f3f3f15.081c31",
-                "5902d0c0.241a6"
+                "597adbcc.22de84"
             ]
         ]
     },
@@ -321,7 +321,8 @@
         "y": 200,
         "wires": [
             [
-                "f3f3f15.081c31"
+                "f3f3f15.081c31",
+                "f787f6a4.872f68"
             ]
         ]
     },
@@ -337,7 +338,7 @@
         "y": 280,
         "wires": [
             [
-                "cd04ce51.35497"
+                "1708a017.5cabb"
             ]
         ]
     },
@@ -349,7 +350,7 @@
         "func": "for (var ii = 0; ii < msg.payload.readings.length; ++ii)\n{\n    if (msg.payload.readings[ii].type == 'scalar')\n    {\n        msg.payload.readings[ii].alarm.value = 0;\n        if (!isNaN(msg.payload.readings[ii].value))\n        {\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.low)  msg.payload.readings[ii].alarm.value = 1;\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.lolo) msg.payload.readings[ii].alarm.value = 3;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.high) msg.payload.readings[ii].alarm.value = 2;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.hihi) msg.payload.readings[ii].alarm.value = 4;\n        }\n    }\n}\nflow.set('device', msg.payload);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 680,
+        "x": 920,
         "y": 280,
         "wires": [
             [
@@ -410,6 +411,68 @@
         "y": 360,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "1708a017.5cabb",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Calculate lifetime",
+        "func": "var device = msg.payload;\nvar numHistorySamples = 60;\nvar beamCurrentNow = \n{\n    beamCurrent      :   getAttrObject(device, 'readings', 'beamCurrent').value,\n    time             :   new Date().getTime()\n};\nvar lifetimeAttr = getAttrObject(device, 'readings', 'lifetime');\nvar lifeTimeDeltaT = getAttrObject(device, 'settings', 'lifeTimeDeltaT').value;\nvar minCurrent = getAttrObject(device, 'settings', 'minCurrent').value;\nlifetimeAttr.value = 0.1;\nvar beamCurrentHistory = context.get('beamCurrentHistory');\nif (beamCurrentHistory == undefined)\n{\n    beamCurrentHistory = [];\n    for (ii = 0; ii < numHistorySamples; ++ii)\n    {\n        beamCurrentHistory[ii] = \n        {\n            beamCurrent :   beamCurrentNow.beamCurrent,\n            time        :   beamCurrentNow.time\n        };\n    }\n    context.set('beamCurrentHistory', beamCurrentHistory);\n    context.set('dbdtAverage',0.0) ;\n    return msg;\n}\nbeamCurrentHistory.unshift(beamCurrentNow);\nbeamCurrentHistory.pop();\ncontext.set('beamCurrentHistory', beamCurrentHistory);\nvar dbdtAverage = context.get('dbdtAverage');\nvar dbdtNow = beamCurrentHistory[0].beamCurrent - beamCurrentHistory[beamCurrentHistory.length - 1].beamCurrent;\nif ((dbdtNow > 0.0) || (beamCurrentHistory[0].beamCurrent < minCurrent) || (-dbdtNow > minCurrent) )\n{\n    dbdtAverage = 0.0;\n    context.set('dbdtAverage', 0.0);\n    return msg;\n}\ndbdtNow = dbdtNow / (beamCurrentHistory[0].time - beamCurrentHistory[beamCurrentHistory.length - 1].time);\ndbdtNow = dbdtNow * 3600.0 * 1000.0;\nif (-dbdtAverage < 0.01) dbdtAverage = dbdtNow;\ndbdtAverage = dbdtAverage + (dbdtNow - dbdtAverage) / lifeTimeDeltaT;\ncontext.set('dbdtAverage', dbdtAverage);\n\nvar lifetime = -beamCurrentHistory[0].beamCurrent / (dbdtAverage + 1e-9);\nlifetime = Math.round(100.0 * lifetime) / 100.0;\nif (lifetime < 0.1 ) lifetime = 0.1;\nif (lifetime > 100.0 ) lifetime = 100.0;\n \nlifetimeAttr.value = lifetime;\n\nreturn msg;\n\nfunction getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 280,
+        "wires": [
+            [
+                "48601e86.e8b3a"
+            ]
+        ]
+    },
+    {
+        "id": "597adbcc.22de84",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Pretty JSON",
+        "func": "var jsonPretty = JSON.stringify(msg.payload,null,2); \nreturn {topic:'prettyJson', payload:jsonPretty};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 730,
+        "y": 40,
+        "wires": [
+            [
+                "5902d0c0.241a6"
+            ]
+        ]
+    },
+    {
+        "id": "f787f6a4.872f68",
+        "type": "debug",
+        "z": "5f562f66.a301e",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1160,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "48601e86.e8b3a",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Calc avgBeamCurrent",
+        "func": "var numSecsPerDay = 86400;\nvar device = msg.payload;\nbeamCurrent = getAttrObject(device, 'readings', 'beamCurrent').value;\nvar avgBeamCurrent = context.get('avgBeamCurrent');\nif (avgBeamCurrent == undefined)\n{\n    avgBeamCurrent = beamCurrent;\n}\navgBeamCurrent = avgBeamCurrent + (beamCurrent - avgBeamCurrent) / 86400;\ncontext.set('avgBeamCurrent',avgBeamCurrent);\navgDayCurrentAttr = getAttrObject(device, 'readings', 'avgDayCurrent');\navgDayCurrentAttr.value = Math.round(100.0 * avgBeamCurrent) / 100.0;\nreturn msg;\n\nfunction getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 280,
+        "wires": [
+            [
+                "cd04ce51.35497"
+            ]
         ]
     }
 ]
