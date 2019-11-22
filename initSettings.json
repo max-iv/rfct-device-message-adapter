@@ -1,13 +1,13 @@
 {
   "name": "r3-rfct",
-  "arcPeriod": 60000,
-  "timeStamp": 1574341475508,
-  "lastArchive": 1574341438543,
+  "arcPeriod": 20000,
+  "timeStamp": 1574437173564,
+  "lastArchive": 1574437136513,
   "readings": [
     {
       "attr": "rawI",
       "type": "scalar",
-      "value": 4073.5,
+      "value": 4064.5,
       "unit": "unit",
       "alarm": {
         "value": 0,
@@ -27,7 +27,7 @@
     {
       "attr": "rawQ",
       "type": "scalar",
-      "value": 1055.3,
+      "value": 1078.4,
       "unit": "unit",
       "alarm": {
         "value": 0,
@@ -47,7 +47,7 @@
     {
       "attr": "procI",
       "type": "scalar",
-      "value": 2161.9,
+      "value": 2152.7,
       "unit": "unit",
       "alarm": {
         "value": 2,
@@ -67,7 +67,7 @@
     {
       "attr": "procQ",
       "type": "scalar",
-      "value": -973.8,
+      "value": -951.2,
       "unit": "unit",
       "alarm": {
         "value": 0,
@@ -87,7 +87,7 @@
     {
       "attr": "beamCurrent",
       "type": "scalar",
-      "value": 247.44,
+      "value": 245.6,
       "unit": "mA",
       "alarm": {
         "value": 0,
@@ -107,7 +107,7 @@
     {
       "attr": "DACCount",
       "type": "scalar",
-      "value": 1535.6,
+      "value": 1524.2,
       "unit": "unit",
       "alarm": {
         "value": 0,
@@ -127,7 +127,7 @@
     {
       "attr": "DACVolts",
       "type": "scalar",
-      "value": 1.237,
+      "value": 1.228,
       "unit": "Volts",
       "alarm": {
         "value": 0,
@@ -147,7 +147,7 @@
     {
       "attr": "linkQuality",
       "type": "scalar",
-      "value": 50,
+      "value": 49,
       "unit": "/70",
       "alarm": {
         "value": 0,
@@ -167,10 +167,10 @@
     {
       "attr": "signalLevel",
       "type": "scalar",
-      "value": -60,
+      "value": -61,
       "unit": "dBm",
       "alarm": {
-        "value": 0,
+        "value": 1,
         "limits": {
           "lolo": -70,
           "low": -60,
@@ -187,7 +187,7 @@
     {
       "attr": "lifetime",
       "type": "scalar",
-      "value": 14.23,
+      "value": 8.54,
       "unit": "hours",
       "alarm": {
         "value": 0,
@@ -207,7 +207,7 @@
     {
       "attr": "avgDayCurrent",
       "type": "scalar",
-      "value": 244.43,
+      "value": 245.84,
       "unit": "mA",
       "alarm": {
         "value": 0,
@@ -216,6 +216,26 @@
           "low": 0,
           "high": 300,
           "hihi": 301
+        },
+        "notify": {
+          "name": "",
+          "number": "",
+          "time": 0
+        }
+      }
+    },
+    {
+      "attr": "currentRate",
+      "type": "scalar",
+      "value": -0.389,
+      "unit": "mA/min",
+      "alarm": {
+        "value": 0,
+        "limits": {
+          "lolo": -101,
+          "low": -100,
+          "high": 100,
+          "hihi": 101
         },
         "notify": {
           "name": "",
