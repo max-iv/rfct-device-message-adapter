@@ -114,8 +114,30 @@
         "id": "79250bf3.365cc4",
         "type": "mqtt-broker",
         "z": "",
-        "name": "MQTT Broker",
-        "broker": "$(MQTTSERVERIP)",
+        "name": "MQTT Broker 1",
+        "broker": "$(MQTTSERVERIP1)",
+        "port": "1883",
+        "clientid": "$(MQTTCLIENTID)",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "3c926364.cde8dc",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "MQTT Broker 2",
+        "broker": "$(MQTTSERVERIP2)",
         "port": "1883",
         "clientid": "$(MQTTCLIENTID)",
         "usetls": false,
@@ -139,7 +161,7 @@
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
         "x": 70,
-        "y": 280,
+        "y": 360,
         "wires": [
             [
                 "d5761f6c.c46e6"
@@ -150,13 +172,13 @@
         "id": "93049b70.2dc5c8",
         "type": "mqtt out",
         "z": "5f562f66.a301e",
-        "name": "Publish Readings",
+        "name": "Publish Readings 1",
         "topic": "$(MQTTPUBLISHTOPIC)",
         "qos": "0",
         "retain": "false",
         "broker": "79250bf3.365cc4",
-        "x": 1130,
-        "y": 280,
+        "x": 1150,
+        "y": 360,
         "wires": []
     },
     {
@@ -166,14 +188,14 @@
         "name": "Teensy",
         "serial": "21ff842d.62f36c",
         "x": 1160,
-        "y": 120,
+        "y": 200,
         "wires": []
     },
     {
         "id": "8cda9011.eab33",
         "type": "mqtt in",
         "z": "5f562f66.a301e",
-        "name": "Subscribe Settings",
+        "name": "Subscribe Settings 1",
         "topic": "$(MQTTSUBSCRIBETOPIC)",
         "qos": "0",
         "datatype": "auto",
@@ -228,7 +250,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 960,
-        "y": 120,
+        "y": 200,
         "wires": [
             [
                 "3f988ea4.7ee392"
@@ -248,7 +270,7 @@
         "once": true,
         "onceDelay": "5",
         "x": 130,
-        "y": 120,
+        "y": 200,
         "wires": [
             [
                 "f3f3f15.081c31"
@@ -268,7 +290,7 @@
         "once": true,
         "onceDelay": "1",
         "x": 140,
-        "y": 200,
+        "y": 280,
         "wires": [
             [
                 "163af492.5e952b"
@@ -286,7 +308,7 @@
         "sendError": false,
         "encoding": "none",
         "x": 360,
-        "y": 200,
+        "y": 280,
         "wires": [
             [
                 "53c95857.5f3d68"
@@ -302,7 +324,7 @@
         "action": "",
         "pretty": false,
         "x": 530,
-        "y": 200,
+        "y": 280,
         "wires": [
             [
                 "30f384ea.cf21fc"
@@ -318,7 +340,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 720,
-        "y": 200,
+        "y": 280,
         "wires": [
             [
                 "f3f3f15.081c31",
@@ -335,7 +357,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 250,
-        "y": 280,
+        "y": 360,
         "wires": [
             [
                 "1708a017.5cabb"
@@ -350,10 +372,11 @@
         "func": "for (var ii = 0; ii < msg.payload.readings.length; ++ii)\n{\n    if (msg.payload.readings[ii].type == 'scalar')\n    {\n        msg.payload.readings[ii].alarm.value = 0;\n        if (!isNaN(msg.payload.readings[ii].value))\n        {\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.low)  msg.payload.readings[ii].alarm.value = 1;\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.lolo) msg.payload.readings[ii].alarm.value = 3;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.high) msg.payload.readings[ii].alarm.value = 2;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.hihi) msg.payload.readings[ii].alarm.value = 4;\n        }\n    }\n}\nflow.set('device', msg.payload);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 920,
-        "y": 280,
+        "x": 940,
+        "y": 360,
         "wires": [
             [
+                "27bc7e27.b76a22",
                 "93049b70.2dc5c8"
             ]
         ]
@@ -370,7 +393,7 @@
         "oldrc": false,
         "name": "",
         "x": 280,
-        "y": 360,
+        "y": 440,
         "wires": [
             [
                 "afd71a05.ebd4e8"
@@ -392,7 +415,7 @@
         "once": true,
         "onceDelay": 0.1,
         "x": 120,
-        "y": 360,
+        "y": 440,
         "wires": [
             [
                 "f69c600b.9542"
@@ -408,7 +431,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 460,
-        "y": 360,
+        "y": 440,
         "wires": [
             []
         ]
@@ -422,10 +445,10 @@
         "outputs": 1,
         "noerr": 0,
         "x": 490,
-        "y": 280,
+        "y": 360,
         "wires": [
             [
-                "48601e86.e8b3a"
+                "c07905e4.e24cc8"
             ]
         ]
     },
@@ -455,23 +478,73 @@
         "console": false,
         "tostatus": false,
         "complete": "false",
-        "x": 1090,
-        "y": 200,
+        "x": 1050,
+        "y": 280,
         "wires": []
     },
     {
-        "id": "48601e86.e8b3a",
+        "id": "c07905e4.e24cc8",
         "type": "function",
         "z": "5f562f66.a301e",
-        "name": "Calc avgBeamCurrent",
-        "func": "var numSecsPerDay = 86400;\nvar device = msg.payload;\nbeamCurrent = getAttrObject(device, 'readings', 'beamCurrent').value;\nvar avgBeamCurrent = context.get('avgBeamCurrent');\nif (avgBeamCurrent == undefined)\n{\n    avgBeamCurrent = beamCurrent;\n}\navgBeamCurrent = avgBeamCurrent + (beamCurrent - avgBeamCurrent) / 86400;\ncontext.set('avgBeamCurrent',avgBeamCurrent);\navgDayCurrentAttr = getAttrObject(device, 'readings', 'avgDayCurrent');\navgDayCurrentAttr.value = Math.round(100.0 * avgBeamCurrent) / 100.0;\nreturn msg;\n\nfunction getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\n",
+        "name": "Calc Beam Current Sum",
+        "func": "if (msg.topic == 'reset')\n{\n    beamCurrentSum = \n    {\n        sum : 0.0,\n        time: new Date().getTime()\n    };\n    context.set('beamCurrentSum',beamCurrentSum);\n    return null;\n}\nvar numSecsPerDay = 86400;\nvar device = msg.payload;\nbeamCurrent = getAttrObject(device, 'readings', 'beamCurrent').value;\nvar minCurrent = getAttrObject(device, 'settings', 'minCurrent').value;\n\nif (beamCurrent < minCurrent) beamCurrent = 0.0;\nnow = new Date().getTime();\n\nvar beamCurrentSum = context.get('beamCurrentSum');\nif (beamCurrentSum == undefined)\n{\n    beamCurrentSum = \n    {\n        sum : 0.0,\n        time: now\n    };\n}\nbeamCurrentSum.sum = beamCurrentSum.sum + beamCurrent * (now - beamCurrentSum.time) / 1000.0;\nbeamCurrentSum.time = now;\ncontext.set('beamCurrentSum',beamCurrentSum);\navgDayCurrentAttr = getAttrObject(device, 'readings', 'avgDayCurrent');\navgDayCurrentAttr.value = Math.round(1000.0 * beamCurrentSum.sum / numSecsPerDay) / 1000.0; \nreturn msg;\n\nfunction getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 700,
-        "y": 280,
+        "x": 710,
+        "y": 360,
         "wires": [
             [
                 "cd04ce51.35497"
+            ]
+        ]
+    },
+    {
+        "id": "48e2619f.343b9",
+        "type": "inject",
+        "z": "5f562f66.a301e",
+        "name": "Reset at 8 am",
+        "topic": "reset",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "00 08 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 480,
+        "y": 400,
+        "wires": [
+            [
+                "c07905e4.e24cc8"
+            ]
+        ]
+    },
+    {
+        "id": "27bc7e27.b76a22",
+        "type": "mqtt out",
+        "z": "5f562f66.a301e",
+        "name": "Publish Readings 2",
+        "topic": "$(MQTTPUBLISHTOPIC)",
+        "qos": "0",
+        "retain": "false",
+        "broker": "3c926364.cde8dc",
+        "x": 1150,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "6afc5d88.a477e4",
+        "type": "mqtt in",
+        "z": "5f562f66.a301e",
+        "name": "Subscribe Settings 2",
+        "topic": "$(MQTTSUBSCRIBETOPIC)",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "3c926364.cde8dc",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "dc36009e.fdeeb"
             ]
         ]
     }
