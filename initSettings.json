@@ -4,408 +4,404 @@
   "arcPeriod": 20000,
   "timeStamp": 1574792656599,
   "lastArchive": 1574792656599,
-  "readings": [
-    {
-      "attr": "rawI",
-      "type": "scalar",
-      "value": 3978.9,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0,
-          "low": 0,
-          "high": 4100,
-          "hihi": 4200
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "rawQ",
-      "type": "scalar",
-      "value": 1132.3,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0,
-          "low": 0,
-          "high": 4100,
-          "hihi": 4200
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "procI",
-      "type": "scalar",
-      "value": 2079.2,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -2200,
-          "low": -2100,
-          "high": 2100,
-          "hihi": 2200
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "procQ",
-      "type": "scalar",
-      "value": -901.8,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -2200,
-          "low": -2100,
-          "high": 4100,
-          "hihi": 4200
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "beamCurrent",
-      "type": "scalar",
-      "value": 232.57,
-      "unit": "mA",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -1,
-          "low": -0.5,
-          "high": 260,
-          "hihi": 300
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "DACCount",
-      "type": "scalar",
-      "value": 1443.3,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -1,
-          "low": -0.5,
-          "high": 4100,
-          "hihi": 4200
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "DACVolts",
-      "type": "scalar",
-      "value": 1.163,
-      "unit": "Volts",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -1,
-          "low": -0.5,
-          "high": 3.2,
-          "hihi": 3.3
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "linkQuality",
-      "type": "scalar",
-      "value": 50,
-      "unit": "/70",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 30,
-          "low": 40,
-          "high": 71,
-          "hihi": 80
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "signalLevel",
-      "type": "scalar",
-      "value": -60,
-      "unit": "dBm",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -70,
-          "low": -60,
-          "high": 0,
-          "hihi": 30
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "lifetime",
-      "type": "scalar",
-      "value": 10.57,
-      "unit": "hours",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0,
-          "low": 0,
-          "high": 1000,
-          "hihi": 1001
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "avgDayCurrent",
-      "type": "scalar",
-      "value": 15.519,
-      "unit": "mA",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0,
-          "low": 0,
-          "high": 300,
-          "hihi": 301
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "currentRate",
-      "type": "scalar",
-      "value": -0.416,
-      "unit": "mA/min",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": -101,
-          "low": -100,
-          "high": 100,
-          "hihi": 101
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
+  "rawI": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 1865.2,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0,
+        "high": 4100,
+        "hihi": 4200
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
       }
     }
-  ],
-  "settings": [
-    {
-      "attr": "numSamples",
-      "type": "scalar",
-      "value": 400,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 1,
-          "low": 10,
-          "high": 1000,
-          "hihi": 2000
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "rawIOffset",
-      "type": "scalar",
-      "value": 1944.5,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 1000,
-          "low": 1100,
-          "high": 2900,
-          "hihi": 3000
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "rawQOffset",
-      "type": "scalar",
-      "value": 2054,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 1000,
-          "low": 1100,
-          "high": 2900,
-          "hihi": 3000
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "gainDif",
-      "type": "scalar",
-      "value": 1.022,
-      "unit": "unit",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0.5,
-          "low": 0.7,
-          "high": 1.5,
-          "hihi": 2
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "mA_to_ADC",
-      "type": "scalar",
-      "value": 0.10598,
-      "unit": "mA",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0,
-          "low": 0.01,
-          "high": 1,
-          "hihi": 2
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "DAC_to_mA",
-      "type": "scalar",
-      "value": 6.206,
-      "unit": "mA-1",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 0,
-          "low": 0.01,
-          "high": 10,
-          "hihi": 15
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "lifeTimeDeltaT",
-      "type": "scalar",
-      "value": 50,
-      "unit": "min",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 1,
-          "low": 2,
-          "high": 3600,
-          "hihi": 3601
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
-      }
-    },
-    {
-      "attr": "minCurrent",
-      "type": "scalar",
-      "value": 2,
-      "unit": "mA",
-      "alarm": {
-        "value": 0,
-        "limits": {
-          "lolo": 1,
-          "low": 2,
-          "high": 300,
-          "hihi": 301
-        },
-        "notify": {
-          "name": "",
-          "number": "",
-          "time": 0
-        }
+  },
+  "rawQ": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 2039.2,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0,
+        "high": 4100,
+        "hihi": 4200
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
       }
     }
-  ]
+  },
+  "procI": {
+    "action": "reading",
+    "type": "scalar",
+    "value": -81,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -2200,
+        "low": -2100,
+        "high": 2100,
+        "hihi": 2200
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "procQ": {
+    "action": "reading",
+    "type": "scalar",
+    "value": -14.5,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -2200,
+        "low": -2100,
+        "high": 4100,
+        "hihi": 4200
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "beamCurrent": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 8.72,
+    "unit": "mA",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -2,
+        "low": -0.5,
+        "high": 260,
+        "hihi": 300
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "DACCount": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 54.1,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -1,
+        "low": -0.5,
+        "high": 4100,
+        "hihi": 4200
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "DACVolts": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 0.044,
+    "unit": "Volts",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -1,
+        "low": -0.5,
+        "high": 3.2,
+        "hihi": 3.3
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "linkQuality": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 53,
+    "unit": "/70",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 30,
+        "low": 40,
+        "high": 71,
+        "hihi": 80
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "signalLevel": {
+    "action": "reading",
+    "type": "scalar",
+    "value": -57,
+    "unit": "dBm",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -70,
+        "low": -60,
+        "high": 0,
+        "hihi": 30
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "lifetime": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 7.16,
+    "unit": "hours",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0,
+        "high": 1000,
+        "hihi": 1001
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "avgDayCurrent": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 0.168,
+    "unit": "mA",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0,
+        "high": 300,
+        "hihi": 301
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "currentRate": {
+    "action": "reading",
+    "type": "scalar",
+    "value": -0.02,
+    "unit": "mA/min",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -101,
+        "low": -100,
+        "high": 100,
+        "hihi": 101
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "numSamples": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 400,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 1,
+        "low": 10,
+        "high": 1000,
+        "hihi": 2000
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "rawIOffset": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 1944.5,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 1000,
+        "low": 1100,
+        "high": 2900,
+        "hihi": 3000
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "rawQOffset": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 2054,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 1000,
+        "low": 1100,
+        "high": 2900,
+        "hihi": 3000
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "gainDif": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 1.022,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0.5,
+        "low": 0.7,
+        "high": 1.5,
+        "hihi": 2
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "mAToADC": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 0.10598,
+    "unit": "mA",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0.01,
+        "high": 1,
+        "hihi": 2
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "DACTomA": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 6.206,
+    "unit": "mA-1",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0.01,
+        "high": 10,
+        "hihi": 15
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "lifeTimeDeltaT": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 50,
+    "unit": "min",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 1,
+        "low": 2,
+        "high": 3600,
+        "hihi": 3601
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "minCurrent": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 2,
+    "unit": "mA",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 1,
+        "low": 2,
+        "high": 300,
+        "hihi": 301
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  }
 }

@@ -220,8 +220,8 @@
         "y": 40,
         "wires": [
             [
-                "f3f3f15.081c31",
-                "597adbcc.22de84"
+                "597adbcc.22de84",
+                "9c8d6065.5dba8"
             ]
         ]
     },
@@ -246,7 +246,7 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "createSettings",
-        "func": "function getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\nvar echoReadings = 0;\nvar device = null;\n\nif (msg.topic == 'echoReadings')\n{\n    echoReadings = 1;\n    device = flow.get('device');\n    \n}\nelse\n{\n    echoReadings = 0;\n    device = msg.payload;\n    for (var ii = 0; ii < msg.payload.settings.length; ++ii)\n    {\n        if (msg.payload.settings[ii].type == 'scalar')\n        {\n            msg.payload.settings[ii].alarm.value = 0;\n            if (!isNaN(msg.payload.settings[ii].value))\n            {\n                if (msg.payload.settings[ii].value < msg.payload.settings[ii].alarm.limits.low)  msg.payload.settings[ii].alarm.value = 1;\n                if (msg.payload.settings[ii].value < msg.payload.settings[ii].alarm.limits.lolo) msg.payload.settings[ii].alarm.value = 3;\n                if (msg.payload.settings[ii].value > msg.payload.settings[ii].alarm.limits.high) msg.payload.settings[ii].alarm.value = 2;\n                if (msg.payload.settings[ii].value > msg.payload.settings[ii].alarm.limits.hihi) msg.payload.settings[ii].alarm.value = 4;\n            }\n        }\n    }\n\n    flow.set('device', msg.payload);    \n}\n\nvar buffer = new ArrayBuffer(28);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0,echoReadings, true);\nsettingsView.setFloat32(4, getAttrObject(device, 'settings', 'numSamples').value, true);\nsettingsView.setFloat32(8, getAttrObject(device, 'settings', 'rawIOffset').value, true);\nsettingsView.setFloat32(12,getAttrObject(device, 'settings', 'rawQOffset').value, true);\nsettingsView.setFloat32(16,getAttrObject(device, 'settings', 'gainDif').value, true);\nsettingsView.setFloat32(20,getAttrObject(device, 'settings', 'mA_to_ADC').value, true);\nsettingsView.setFloat32(24,getAttrObject(device, 'settings', 'DAC_to_mA').value, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};",
+        "func": "var echoReadings = 0;\nvar device = null;\n\nif (msg.topic == 'echoReadings')\n{\n    echoReadings = 1;\n    device = flow.get('device');\n    \n}\nelse\n{\n    echoReadings = 0;\n    device = msg.payload;\n    flow.set('device', msg.payload);    \n}\n\nvar buffer = new ArrayBuffer(28);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0,echoReadings, true);\nsettingsView.setFloat32(4, device.numSamples.value, true);\nsettingsView.setFloat32(8, device.rawIOffset.value, true);\nsettingsView.setFloat32(12,device.rawQOffset.value, true);\nsettingsView.setFloat32(16,device.gainDif.value, true);\nsettingsView.setFloat32(20,device.mAToADC.value, true);\nsettingsView.setFloat32(24,device.DACTomA.value, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};",
         "outputs": 1,
         "noerr": 0,
         "x": 960,
@@ -353,7 +353,7 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Parse Reading Byte Array",
-        "func": "function getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\nvar ib;\n\nvar device = flow.get('device');\nvar rawIAttr        = getAttrObject(device, 'readings', 'rawI');\nvar rawQAttr        = getAttrObject(device, 'readings', 'rawQ');\nvar procIAttr       = getAttrObject(device, 'readings', 'procI');\nvar procQAttr       = getAttrObject(device, 'readings', 'procQ');\nvar beamCurrentAttr = getAttrObject(device, 'readings', 'beamCurrent');\nvar DACCountAttr    = getAttrObject(device, 'readings', 'DACCount');\nvar DACVoltsAttr    = getAttrObject(device, 'readings', 'DACVolts');\nvar linkQualityAttr = getAttrObject(device, 'readings', 'linkQuality');\nvar signalLevelAttr = getAttrObject(device, 'readings', 'signalLevel');\n\nvar rawI        = new DataView(new ArrayBuffer(4));\nvar rawQ        = new DataView(new ArrayBuffer(4));\nvar procI       = new DataView(new ArrayBuffer(4));\nvar procQ       = new DataView(new ArrayBuffer(4));\nvar beamCurrent = new DataView(new ArrayBuffer(4));\nvar DACCount    = new DataView(new ArrayBuffer(4));\nvar DACVolts    = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)         rawI.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)         rawQ.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)        procI.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)        procQ.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)  beamCurrent.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)     DACCount.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)     DACVolts.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\n\nrawIAttr.value        = Math.round(10.0   * rawI.getFloat32(0)       ) / 10.0;\nrawQAttr.value        = Math.round(10.0   * rawQ.getFloat32(0)       ) / 10.0;\nprocIAttr.value       = Math.round(10.0   * procI.getFloat32(0)      ) / 10.0;\nprocQAttr.value       = Math.round(10.0   * procQ.getFloat32(0)      ) / 10.0;\nbeamCurrentAttr.value = Math.round(100.0  * beamCurrent.getFloat32(0)) / 100.0;\nDACCountAttr.value    = Math.round(10.0   * DACCount.getFloat32(0)   ) / 10.0;\nDACVoltsAttr.value    = Math.round(1000.0 * DACVolts.getFloat32(0)   ) / 1000.0;\nlinkQualityAttr.value = flow.get('linkQuality');\nsignalLevelAttr.value = flow.get('signalLevel');\n\nreturn {topic : 'reading', payload : device};\n",
+        "func": "var ib;\n\nvar device = flow.get('device');\nvar rawIAttr        = device.rawI;\nvar rawQAttr        = device.rawQ;\nvar procIAttr       = device.procI;\nvar procQAttr       = device.procQ;\nvar beamCurrentAttr = device.beamCurrent;\nvar DACCountAttr    = device.DACCount;\nvar DACVoltsAttr    = device.DACVolts;\nvar linkQualityAttr = device.linkQuality;\nvar signalLevelAttr = device.signalLevel;\n\nvar rawI        = new DataView(new ArrayBuffer(4));\nvar rawQ        = new DataView(new ArrayBuffer(4));\nvar procI       = new DataView(new ArrayBuffer(4));\nvar procQ       = new DataView(new ArrayBuffer(4));\nvar beamCurrent = new DataView(new ArrayBuffer(4));\nvar DACCount    = new DataView(new ArrayBuffer(4));\nvar DACVolts    = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)         rawI.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)         rawQ.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)        procI.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)        procQ.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)  beamCurrent.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)     DACCount.setUint8(ib, msg.payload[5 * 4 + 3 - ib]);\nfor (ib = 0; ib < 4; ++ib)     DACVolts.setUint8(ib, msg.payload[6 * 4 + 3 - ib]);\n\n\nrawIAttr.value        = Math.round(10.0   * rawI.getFloat32(0)       ) / 10.0;\nrawQAttr.value        = Math.round(10.0   * rawQ.getFloat32(0)       ) / 10.0;\nprocIAttr.value       = Math.round(10.0   * procI.getFloat32(0)      ) / 10.0;\nprocQAttr.value       = Math.round(10.0   * procQ.getFloat32(0)      ) / 10.0;\nbeamCurrentAttr.value = Math.round(100.0  * beamCurrent.getFloat32(0)) / 100.0;\nDACCountAttr.value    = Math.round(10.0   * DACCount.getFloat32(0)   ) / 10.0;\nDACVoltsAttr.value    = Math.round(1000.0 * DACVolts.getFloat32(0)   ) / 1000.0;\nlinkQualityAttr.value = flow.get('linkQuality');\nsignalLevelAttr.value = flow.get('signalLevel');\n\nreturn {topic : 'reading', payload : device};\n",
         "outputs": 1,
         "noerr": 0,
         "x": 250,
@@ -361,23 +361,6 @@
         "wires": [
             [
                 "1708a017.5cabb"
-            ]
-        ]
-    },
-    {
-        "id": "cd04ce51.35497",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Check Reading Alarms",
-        "func": "for (var ii = 0; ii < msg.payload.readings.length; ++ii)\n{\n    if (msg.payload.readings[ii].type == 'scalar')\n    {\n        msg.payload.readings[ii].alarm.value = 0;\n        if (!isNaN(msg.payload.readings[ii].value))\n        {\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.low)  msg.payload.readings[ii].alarm.value = 1;\n            if (msg.payload.readings[ii].value < msg.payload.readings[ii].alarm.limits.lolo) msg.payload.readings[ii].alarm.value = 3;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.high) msg.payload.readings[ii].alarm.value = 2;\n            if (msg.payload.readings[ii].value > msg.payload.readings[ii].alarm.limits.hihi) msg.payload.readings[ii].alarm.value = 4;\n        }\n    }\n}\nflow.set('device', msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 940,
-        "y": 360,
-        "wires": [
-            [
-                "27bc7e27.b76a22",
-                "93049b70.2dc5c8"
             ]
         ]
     },
@@ -441,7 +424,7 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Calculate lifetime",
-        "func": "var device = msg.payload;\nvar numHistorySamples = 60;\nvar fillingMachine = false;\nvar beamCurrentNow = \n{\n    beamCurrent      :   getAttrObject(device, 'readings', 'beamCurrent').value,\n    time             :   new Date().getTime()\n};\nvar lifetimeAttr = getAttrObject(device, 'readings', 'lifetime');\nvar currentRateAttr = getAttrObject(device, 'readings', 'currentRate');\ncurrentRateAttr.value = 0.0;\nvar lifeTimeDeltaT = getAttrObject(device, 'settings', 'lifeTimeDeltaT').value;\nvar minCurrent = getAttrObject(device, 'settings', 'minCurrent').value;\nlifetimeAttr.value = 100.0;\nvar beamCurrentHistory = context.get('beamCurrentHistory');\nif (beamCurrentHistory == undefined)\n{\n    beamCurrentHistory = [];\n    for (ii = 0; ii < numHistorySamples; ++ii)\n    {\n        beamCurrentHistory[ii] = \n        {\n            beamCurrent :   beamCurrentNow.beamCurrent,\n            time        :   beamCurrentNow.time\n        };\n    }\n    context.set('beamCurrentHistory', beamCurrentHistory);\n    context.set('dbdtLTAverage',0.0) ;\n    context.set('dbdtAverage',0.0) ;\n    return msg;\n}\nbeamCurrentHistory.unshift(beamCurrentNow);\nbeamCurrentHistory.pop();\ncontext.set('beamCurrentHistory', beamCurrentHistory);\nvar dbdtLTAverage = context.get('dbdtLTAverage');\nvar dbdtAverage = context.get('dbdtAverage');\nvar dbdtNow = beamCurrentHistory[0].beamCurrent - beamCurrentHistory[beamCurrentHistory.length - 1].beamCurrent;\nif ((dbdtNow > 0.0) || (beamCurrentHistory[0].beamCurrent < minCurrent) || (-dbdtNow > minCurrent) )\n{\n    dbdtLTAverage = 0.0;\n    context.set('dbdtLTAverage', 0.0);\n    fillingMachine = true;\n}\ndbdtNow = dbdtNow / (beamCurrentHistory[0].time - beamCurrentHistory[beamCurrentHistory.length - 1].time);\ndbdtNow = dbdtNow * 3600.0 * 1000.0;\nif (!fillingMachine)\n{\n    if (-dbdtLTAverage < 0.01) dbdtLTAverage = dbdtNow;\n    dbdtLTAverage = dbdtLTAverage + (dbdtNow - dbdtLTAverage) / lifeTimeDeltaT;\n    context.set('dbdtLTAverage', dbdtLTAverage);\n    \n    var lifetime = -beamCurrentHistory[0].beamCurrent / (dbdtLTAverage + 1e-9);\n    lifetime = Math.round(100.0 * lifetime) / 100.0;\n    if (lifetime < 0.1 ) lifetime = 0.1;\n    if (lifetime > 100.0 ) lifetime = 100.0;\n     \n    lifetimeAttr.value = lifetime;\n}\ndbdtAverage = dbdtAverage + (dbdtNow - dbdtAverage) / 1.0; //lifeTimeDeltaT;\ncontext.set('dbdtAverage', dbdtAverage);\nvar dbdtAverageMin = Math.round(1000.0 * dbdtAverage / 60.0) / 1000.0;\ncurrentRateAttr.value = dbdtAverageMin;\n//node.warn(dbdtAverageMin);\n\nreturn msg;\n\nfunction getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\n",
+        "func": "var device = msg.payload;\nvar numHistorySamples = 60;\nvar fillingMachine = false;\nvar beamCurrentNow = \n{\n    beamCurrent      :   device.beamCurrent.value,\n    time             :   new Date().getTime()\n};\nvar lifetimeAttr = device.lifetime;\nvar currentRateAttr = device.currentRate;\ncurrentRateAttr.value = 0.0;\nvar lifeTimeDeltaT = device.lifeTimeDeltaT.value;\nvar minCurrent = device.minCurrent.value;\nlifetimeAttr.value = 100.0;\nvar beamCurrentHistory = context.get('beamCurrentHistory');\nif (beamCurrentHistory == undefined)\n{\n    beamCurrentHistory = [];\n    for (ii = 0; ii < numHistorySamples; ++ii)\n    {\n        beamCurrentHistory[ii] = \n        {\n            beamCurrent :   beamCurrentNow.beamCurrent,\n            time        :   beamCurrentNow.time\n        };\n    }\n    context.set('beamCurrentHistory', beamCurrentHistory);\n    context.set('dbdtLTAverage',0.0) ;\n    context.set('dbdtAverage',0.0) ;\n    return msg;\n}\nbeamCurrentHistory.unshift(beamCurrentNow);\nbeamCurrentHistory.pop();\ncontext.set('beamCurrentHistory', beamCurrentHistory);\nvar dbdtLTAverage = context.get('dbdtLTAverage');\nvar dbdtAverage = context.get('dbdtAverage');\nvar dbdtNow = beamCurrentHistory[0].beamCurrent - beamCurrentHistory[beamCurrentHistory.length - 1].beamCurrent;\nif ((dbdtNow > 0.0) || (beamCurrentHistory[0].beamCurrent < minCurrent) || (-dbdtNow > minCurrent) )\n{\n    dbdtLTAverage = 0.0;\n    context.set('dbdtLTAverage', 0.0);\n    fillingMachine = true;\n}\ndbdtNow = dbdtNow / (beamCurrentHistory[0].time - beamCurrentHistory[beamCurrentHistory.length - 1].time);\ndbdtNow = dbdtNow * 3600.0 * 1000.0;\nif (!fillingMachine)\n{\n    if (-dbdtLTAverage < 0.01) dbdtLTAverage = dbdtNow;\n    dbdtLTAverage = dbdtLTAverage + (dbdtNow - dbdtLTAverage) / lifeTimeDeltaT;\n    context.set('dbdtLTAverage', dbdtLTAverage);\n    \n    var lifetime = -beamCurrentHistory[0].beamCurrent / (dbdtLTAverage + 1e-9);\n    lifetime = Math.round(100.0 * lifetime) / 100.0;\n    if (lifetime < 0.1 ) lifetime = 0.1;\n    if (lifetime > 100.0 ) lifetime = 100.0;\n     \n    lifetimeAttr.value = lifetime;\n}\ndbdtAverage = dbdtAverage + (dbdtNow - dbdtAverage) / 1.0; //lifeTimeDeltaT;\ncontext.set('dbdtAverage', dbdtAverage);\nvar dbdtAverageMin = Math.round(1000.0 * dbdtAverage / 60.0) / 1000.0;\ncurrentRateAttr.value = dbdtAverageMin;\n//node.warn(dbdtAverageMin);\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "x": 490,
@@ -487,14 +470,14 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Calc Beam Current Sum",
-        "func": "if (msg.topic == 'reset')\n{\n    beamCurrentSum = \n    {\n        sum : 0.0,\n        time: new Date().getTime()\n    };\n    context.set('beamCurrentSum',beamCurrentSum);\n    return null;\n}\nvar numSecsPerDay = 86400;\nvar device = msg.payload;\nbeamCurrent = getAttrObject(device, 'readings', 'beamCurrent').value;\nvar minCurrent = getAttrObject(device, 'settings', 'minCurrent').value;\n\nif (beamCurrent < minCurrent) beamCurrent = 0.0;\nnow = new Date().getTime();\n\nvar beamCurrentSum = context.get('beamCurrentSum');\nif (beamCurrentSum == undefined)\n{\n    beamCurrentSum = \n    {\n        sum : 0.0,\n        time: now\n    };\n}\nbeamCurrentSum.sum = beamCurrentSum.sum + beamCurrent * (now - beamCurrentSum.time) / 1000.0;\nbeamCurrentSum.time = now;\ncontext.set('beamCurrentSum',beamCurrentSum);\navgDayCurrentAttr = getAttrObject(device, 'readings', 'avgDayCurrent');\navgDayCurrentAttr.value = Math.round(1000.0 * beamCurrentSum.sum / numSecsPerDay) / 1000.0; \nreturn msg;\n\nfunction getAttrObject(device, propName, attrName)\n{\n    var props = device[propName];\n    var attr = props.find(attr => attr.attr === attrName);\n    return attr;\n}\n",
+        "func": "if (msg.topic == 'reset')\n{\n    beamCurrentSum = \n    {\n        sum : 0.0,\n        time: new Date().getTime()\n    };\n    context.set('beamCurrentSum',beamCurrentSum);\n    return null;\n}\nvar numSecsPerDay = 86400;\nvar device = msg.payload;\nbeamCurrent = device.beamCurrent.value;\nvar minCurrent = device.minCurrent.value;\n\nif (beamCurrent < minCurrent) beamCurrent = 0.0;\nnow = new Date().getTime();\n\nvar beamCurrentSum = context.get('beamCurrentSum');\nif (beamCurrentSum == undefined)\n{\n    beamCurrentSum = \n    {\n        sum : 0.0,\n        time: now\n    };\n}\nbeamCurrentSum.sum = beamCurrentSum.sum + beamCurrent * (now - beamCurrentSum.time) / 1000.0;\nbeamCurrentSum.time = now;\ncontext.set('beamCurrentSum',beamCurrentSum);\navgDayCurrentAttr = device.avgDayCurrent;\navgDayCurrentAttr.value = Math.round(1000.0 * beamCurrentSum.sum / numSecsPerDay) / 1000.0; \nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "x": 710,
         "y": 360,
         "wires": [
             [
-                "cd04ce51.35497"
+                "c29c041d.0dcc78"
             ]
         ]
     },
@@ -545,6 +528,39 @@
         "wires": [
             [
                 "dc36009e.fdeeb"
+            ]
+        ]
+    },
+    {
+        "id": "9c8d6065.5dba8",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Settings Alarm Scan",
+        "func": "scalarAlarmScan(msg.payload, 'setting');\nflow.set('device', msg.payload); \n\nreturn msg;\n\nfunction getActionArray(device, type, actionType)\n{\n    var actionArray = [];\n    var keys = Object.keys(device);\n    for (var ii = 0; ii < keys.length; ++ii)\n    {\n        if (device[keys[ii]].hasOwnProperty('type'))\n        {\n            if (device[keys[ii]].type == type)\n            {\n                if (device[keys[ii]].action == actionType)\n                {\n                    actionArray.push(device[keys[ii]]);\n                }\n            }\n        }\n    }\n    return actionArray;\n}\nfunction scalarAlarmScan(device, actionType)\n{\n    var actionArray = getActionArray(device, 'scalar', actionType);\n    if (actionArray.length > 0)\n    {\n        for (var ii = 0; ii < actionArray.length; ++ii)\n        {\n            actionArray[ii].alarm.value = 0;\n            if (!isNaN(actionArray[ii].value))\n            {\n                if (actionArray[ii].value < actionArray[ii].alarm.limits.low)  actionArray[ii].alarm.value = 1;\n                if (actionArray[ii].value < actionArray[ii].alarm.limits.lolo) actionArray[ii].alarm.value = 3;\n                if (actionArray[ii].value > actionArray[ii].alarm.limits.high) actionArray[ii].alarm.value = 2;\n                if (actionArray[ii].value > actionArray[ii].alarm.limits.hihi) actionArray[ii].alarm.value = 4;\n            }\n        }\n    }\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 600,
+        "y": 120,
+        "wires": [
+            [
+                "f3f3f15.081c31"
+            ]
+        ]
+    },
+    {
+        "id": "c29c041d.0dcc78",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Readings Alarm Scan",
+        "func": "scalarAlarmScan(msg.payload, 'reading');\nflow.set('device', msg.payload); \n\nreturn msg;\n\nfunction getActionArray(device, type, actionType)\n{\n    var actionArray = [];\n    var keys = Object.keys(device);\n    for (var ii = 0; ii < keys.length; ++ii)\n    {\n        if (device[keys[ii]].hasOwnProperty('type'))\n        {\n            if (device[keys[ii]].type == type)\n            {\n                if (device[keys[ii]].action == actionType)\n                {\n                    actionArray.push(device[keys[ii]]);\n                }\n            }\n        }\n    }\n    return actionArray;\n}\nfunction scalarAlarmScan(device, actionType)\n{\n    var actionArray = getActionArray(device, 'scalar', actionType);\n    if (actionArray.length > 0)\n    {\n        for (var ii = 0; ii < actionArray.length; ++ii)\n        {\n            actionArray[ii].alarm.value = 0;\n            if (!isNaN(actionArray[ii].value))\n            {\n                if (actionArray[ii].value < actionArray[ii].alarm.limits.low)  actionArray[ii].alarm.value = 1;\n                if (actionArray[ii].value < actionArray[ii].alarm.limits.lolo) actionArray[ii].alarm.value = 3;\n                if (actionArray[ii].value > actionArray[ii].alarm.limits.high) actionArray[ii].alarm.value = 2;\n                if (actionArray[ii].value > actionArray[ii].alarm.limits.hihi) actionArray[ii].alarm.value = 4;\n            }\n        }\n    }\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 940,
+        "y": 360,
+        "wires": [
+            [
+                "93049b70.2dc5c8",
+                "27bc7e27.b76a22"
             ]
         ]
     }
