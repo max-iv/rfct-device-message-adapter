@@ -7,7 +7,7 @@
   "rawI": {
     "action": "reading",
     "type": "scalar",
-    "value": 1865.2,
+    "value": 3891.4,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -27,7 +27,7 @@
   "rawQ": {
     "action": "reading",
     "type": "scalar",
-    "value": 2039.2,
+    "value": 853,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -47,7 +47,7 @@
   "procI": {
     "action": "reading",
     "type": "scalar",
-    "value": -81,
+    "value": 1989.7,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -67,7 +67,7 @@
   "procQ": {
     "action": "reading",
     "type": "scalar",
-    "value": -14.5,
+    "value": -1175.1,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -87,7 +87,7 @@
   "beamCurrent": {
     "action": "reading",
     "type": "scalar",
-    "value": 8.72,
+    "value": 244.9,
     "unit": "mA",
     "alarm": {
       "value": 0,
@@ -95,7 +95,7 @@
         "lolo": -2,
         "low": -0.5,
         "high": 260,
-        "hihi": 300
+        "hihi": 301
       },
       "notify": {
         "name": "",
@@ -107,7 +107,7 @@
   "DACCount": {
     "action": "reading",
     "type": "scalar",
-    "value": 54.1,
+    "value": 1519.8,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -127,7 +127,7 @@
   "DACVolts": {
     "action": "reading",
     "type": "scalar",
-    "value": 0.044,
+    "value": 1.224,
     "unit": "Volts",
     "alarm": {
       "value": 0,
@@ -187,7 +187,7 @@
   "lifetime": {
     "action": "reading",
     "type": "scalar",
-    "value": 7.16,
+    "value": 51.73,
     "unit": "hours",
     "alarm": {
       "value": 0,
@@ -207,7 +207,7 @@
   "avgDayCurrent": {
     "action": "reading",
     "type": "scalar",
-    "value": 0.168,
+    "value": 17.833,
     "unit": "mA",
     "alarm": {
       "value": 0,
@@ -227,7 +227,7 @@
   "currentRate": {
     "action": "reading",
     "type": "scalar",
-    "value": -0.02,
+    "value": -0.142,
     "unit": "mA/min",
     "alarm": {
       "value": 0,
