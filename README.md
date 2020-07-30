@@ -1,7 +1,7 @@
 # rfct device-message-adapter
 ## need to add .env file with the following
 MQTTPUBLISHTOPIC1=maxiv\/rfct\/r3\/reading<br/>
-MQTTSUBSCRIBETOPIC1=maxiv\/rfct/\r3\/setting<br/>
+MQTTSUBSCRIBETOPIC1=maxiv\/rfct\/r3\/setting<br/>
 MQTTCLIENTID=r3-rfct-tray<br/>
 MQTTSERVERIP1=yyyyyy<br/>
 MQTTUSERNAME1=xxxxxxxx<br/>
